@@ -13,10 +13,10 @@ a great thing to do at the end when I'm sure of everything it can do
 <br /><br />
 
 ## Table of Contents
-Usage
-Features
-Acknowledgments
-Authors
+Usage<br />
+Features<br />
+Acknowledgments<br />
+Authors<br />
 <br /><br />
 
 ## Usage
