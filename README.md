@@ -16,7 +16,7 @@ a great thing to do at the end when I'm sure of everything it can do
 Usage<br />
 Features<br />
 Acknowledgments<br />
-Authors<br />
+Authors
 <br /><br />
 
 ## Usage
