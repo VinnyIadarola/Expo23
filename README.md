@@ -1,36 +1,43 @@
-**#Engineering EXPO 2024 - Electronic Chess board with integrated AI (better name)**
 
 
-**Description**
-a great thing to do at the end when im sure of everything it can do
 
+<div align="center">
 
-**Table of Contents**
+  # Engineering EXPO 2024
+  Electronic Chessboard with integrated AI (better name)
+</div>
+<br /> <br />
+
+## Description
+a great thing to do at the end when I'm sure of everything it can do
+<br /><br />
+
+## Table of Contents
 Usage
 Features
 Acknowledgments
 Authors
+<br /><br />
 
-
-**Usage**
+## Usage
 **DISCLAIMER** - (The ChessLibrary.c and HardwareFunctions.c are meant to work independently from each other to minimize conflicts if either the running program or hardware were changed. However, read the documentation for any breaks to these rules or to adjust for other programs/hardware) 
+<br /><br />
 
+## Features
+Detection and Light System: alkdjfa<br />
+Chess Library: adkjfasldf<br />
+Variable Elo Chess AI: adflkj<br />
+Machine Learned Checkers AI: aldjfa<br />
+Theres prob more that im not putting down rn<br />
+<br /><br />
 
-**Features**
-Detection and Light System: alkdjfa
-Chess Library: adkjfasldf
-Variable Elo Chess AI: adflkj
-Machine Learned Checkers AI: aldjfa
-Theres prob more that im not putting down rn
-
-
-**Acknowledgments**
+## Acknowledgments
 mention whatever preprogrammed chess chip
+<br /><br />
 
-
-**Authors** link ur githubs
-Vincent Iadarola 
-Patrick Brophy 
-Wen Jie Lee
-so on for everyone else
+## Authors link ur githubs
+Vincent Iadarola <br />
+Patrick Brophy <br />
+Wen Jie Lee<br />
+so on for everyone else<br />
 
