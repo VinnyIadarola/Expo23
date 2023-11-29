@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2023
  *
  */
-#include "GameLibrary.h"
+#include "ChessLibrary.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
