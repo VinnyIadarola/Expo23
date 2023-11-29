@@ -104,12 +104,20 @@ static move_t validQueenMoves()
  * @return true
  * @return false
  */
-bool *kingStatus()
+bool *kingStatus(bool color)
 {
     return {{false, false, false}, {false, false, false}, {false, false, false}};
 }
 
-bool *kingCastable()
+/**
+ * @brief checks if the sides of the currrent side's row is being attack or not
+ * to determine if its castable. The first bool value is the west side castle and
+ * second is the east side
+ *
+ * @return true if castle is a valid move
+ * @return false if castling is not a vlid move
+ */
+bool *kingCastable(bool color)
 {
     return {false, false};
 }
@@ -134,6 +142,12 @@ static void setKingDiscoverKing()
 {
 }
 
+/**
+ * @brief checks if the northmost and southern most rows contain any pawns
+ * that need to promote
+ *
+ * @return move_t
+ */
 move_t pawnPromotions()
 {
     return NULL;
