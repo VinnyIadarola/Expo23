@@ -29,16 +29,16 @@ void chessboardInit()
             if (i <= 1)
             {
                 board[i][j].color = true;
-                board[i][j].special_moves = FIRST_MOVE
+                board[i][j].special_status = FIRST_MOVE;
             }
             else if (i >= 6)
             {
                 board[i][j].color = false;
-                board[i][j].special_moves = FIRST_MOVE
+                board[i][j].special_status = FIRST_MOVE;
             }
             else
             {
-                board[i][j] = EMPTY;
+                board[i][j].piece_type = EMPTY;
             }
         }
     }
@@ -59,4 +59,82 @@ void chessboardInit()
     board[0][2].piece_type = board[0][5].piece_type = board[7][2].piece_type = board[7][5].piece_type = BISHOP;
     board[0][3].piece_type = board[7][3].piece_type = QUEEN;
     board[0][4].piece_type = board[7][4].piece_type = KING;
+}
+
+// Pawn
+static move_t validPawnMoves()
+{
+    // Implement pawn-specific logic
+    return NULL;
+}
+
+// Knight
+static move_t validKnightMoves()
+{
+    // Implement knight-specific logic
+    return NULL;
+}
+
+// Bishop
+static move_t validBishopMoves()
+{
+    // Implement bishop-specific logic
+    return NULL;
+}
+
+// Rook
+static move_t validRookMoves()
+{
+    // Implement rook-specific logic
+    return NULL;
+}
+
+// Queen
+static move_t validQueenMoves()
+{
+    // Implement queen-specific logic
+    return NULL;
+}
+
+/**
+ * @brief Checks if any enemy pieces can move into the 3x3 array around the king
+ * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
+ * flags.
+ *
+ * @return true
+ * @return false
+ */
+bool *kingStatus()
+{
+    return {{false, false, false}, {false, false, false}, {false, false, false}};
+}
+
+bool *kingCastable()
+{
+    return {false, false};
+}
+
+game_state_t checkGamOver()
+{
+    return CHESS;
+}
+
+/**
+ * @brief call if the king has no moves other than the center to check if other peices
+ * can move
+ *
+ * @return game_state_t
+ */
+static game_state_t checkStalemate()
+{
+    return STALEMATE;
+}
+
+static void setKingDiscoverKing()
+{
+}
+
+move_t pawnPromotions()
+{
+    return NULL;
 }

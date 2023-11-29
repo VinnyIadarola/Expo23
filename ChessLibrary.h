@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-move_t movelist[28];
+move_t movelist[27];
 bool currTurn;
 
 /**
@@ -90,6 +90,16 @@ void chessboardInit();
 
 move_t *getValidMoves(int row, int col);
 
-bool kingStatus();
+/**
+ * @brief Checks if any enemy pieces can move into the 3x3 array around the king
+ * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
+ * flags.
+ *
+ * @return true
+ * @return false
+ */
+bool *kingStatus();
 
 game_state_t checkGamOver();
+
+move_t pawnPromotions();

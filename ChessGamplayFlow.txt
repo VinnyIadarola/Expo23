@@ -7,7 +7,7 @@ white places their peice
     if invalid move do not allow
     if  valid move piece
 white hits timer and stops theirs
-check king's Status
+check black king's Status
 change turns or end game
 
 if black is human repeat white
@@ -37,6 +37,45 @@ display piece moves
 white places their peice
     if invalid move do not allow
         invalid - not possible | king is in check and does not take/block attacker
+    if  valid move piece
+white hits timer and stops theirs
+    pause interrupt of timer
+check king's Status
+    two different ways of doing so
+        check opponents king at end of turn and predetermine valid king moves and vector method for discovering checks
+            more efficient more code to write
+        check our king during each potential move set if that puts our king in chck or checkmates opponent
+            more resuable code
+check for pawn promotions
+change turns or end game
+    change display whose turn it is 
+
+if black is human repeat white
+robot black turn
+display rand time of thinking
+highlight peice and where to move
+display acknowledge of move made then stop black timer
+change turns or end game
+
+game ends if stalemate | only kings | checkmate | time runs out
+
+
+
+white picks up piece
+    pollForMove();
+
+    calculate based on peice what squares to light up
+    getValidMoves();
+
+    display piece moves
+    turnOnLights(*move_t lightArray);
+        red if attacking white if not attacking
+
+white places their peice
+    pollForMoveEnd();
+    if invalid move do not allow
+        invalid - not possible | king is in check and does not take/block attacker
+        displayBadMove();
     if  valid move piece
 white hits timer and stops theirs
     pause interrupt of timer
