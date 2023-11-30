@@ -74,9 +74,6 @@ typedef struct
     bool discover_check;
 } piece_t;
 
-position_t movelist[27];
-bool currTurn;
-
 void chessboardInit();
 
 position_t *getValidMoves(int row, int col);
@@ -86,16 +83,14 @@ position_t *getValidMoves(int row, int col);
  * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
  * flags.
  *
- * @return true
- * @return false
  */
-bool *kingStatus();
+void kingStatus();
 
 game_state_t checkGameOver();
 
 position_t pawnPromotions();
 
+piece_t board[8][8];
 position_t movelist[27];
-bool currTurn = true;
 
 #endif

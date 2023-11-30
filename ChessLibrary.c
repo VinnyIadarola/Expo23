@@ -12,21 +12,22 @@
 
 // Should lower global var amount but thatll come when we start implementing methods but we dont have a stack so yk how it is
 
-// Interfile variables
+// Interfile variable
+piece_t board[8][8];
+
+// this shouldnt be referenced in any method just know that the max size is 27
 position_t movelist[27];
-bool currTurn = true;
+// THE CURRENT TURN/COLOR SHOULD BE PASSED IN FROM THE GAME ENGINE
 
 // Global variables
-bool kingMoves[3][3];
-piece_t board[8][8];
-bool kingInCheck;
+position_t kingMoves[3][3];
 position_t whiteKing;
 position_t blackKing;
 
 // The line along that we being checked so we can see if there are any valid moves that can block
 position_t checkVector[6];
 // Block is only a valid move if there is only one thing putting us in
-static bool singleCheck;
+bool singleCheck;
 
 /**
  * @brief This function initialize the board to be the start of a chess match
@@ -74,6 +75,16 @@ void chessboardInit()
     board[0][2].piece_type = board[0][5].piece_type = board[7][2].piece_type = board[7][5].piece_type = BISHOP;
     board[0][3].piece_type = board[7][3].piece_type = QUEEN;
     board[0][4].piece_type = board[7][4].piece_type = KING;
+
+    // Sets
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            kingMoves[i][j] = false;
+        }
+    }
+    kingMoves[1][1] = true;
 }
 
 /**
@@ -138,13 +149,31 @@ static position_t *validQueenMoves()
  * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
  * flags.
  *
- * @return true
- * @return false
  */
-bool *kingStatus(bool color)
+void kingStatus(bool kingColor)
 {
-    getCheckVector();
-    return {{false, false, false}, {false, false, false}, {false, false, false}};
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            position_t potentialMoves[3] = getKingPotentialMoves();
+
+            // If board has no peices skip over it
+            if (board[i][j].piece_type == EMPTY)
+            {
+                continue;
+            }
+        }
+    }
+
+    getCheckVector(1, 2);
+}
+
+static getKingPotentialMoves(bool kingColor)
+{
+    if (kingColor)
+    {
+    }
 }
 
 /**
@@ -164,7 +193,7 @@ position_t *getValidMoves(int row, int col)
  *
  * @param row
  * @param col
- * @return *position_t
+ * @return position_t*
  */
 static position_t *getCheckVector(int row, int col)
 {
