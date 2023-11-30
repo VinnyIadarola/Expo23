@@ -37,6 +37,8 @@ uint8_t whiteSec;
 uint8_t blackMin;
 uint8_t blackSec;
 
+bool currTurn;
+
 void pollForMove();
 void waitMove();
 void turnOnLights(position_t *lightArray);
