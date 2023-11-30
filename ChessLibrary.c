@@ -68,6 +68,11 @@ void chessboardInit()
     board[0][4].piece_type = board[7][4].piece_type = KING;
 }
 
+/**
+ * @brief Pawn Max
+ *
+ * @return move_t*
+ */
 // Pawn
 static move_t *validPawnMoves()
 {
@@ -75,6 +80,11 @@ static move_t *validPawnMoves()
     return NULL;
 }
 
+/**
+ * @brief Knight Michael
+ *
+ * @return move_t*
+ */
 // Knight
 static move_t *validKnightMoves()
 {
@@ -82,21 +92,33 @@ static move_t *validKnightMoves()
     return NULL;
 }
 
-// Bishop
+/**
+ * @brief Bishop BEN
+ *
+ * @return move_t*
+ */
 static move_t *validBishopMoves()
 {
     // Implement bishop-specific logic
     return NULL;
 }
 
-// Rook
+/**
+ * @brief Rook KEVIN
+ *
+ * @return move_t*
+ */
 static move_t *validRookMoves()
 {
     // Implement rook-specific logic
     return NULL;
 }
 
-// Queen
+/**
+ * @brief Queen KEVIN
+ *
+ * @return move_t*
+ */
 static move_t *validQueenMoves()
 {
     // Implement queen-specific logic
@@ -116,7 +138,25 @@ bool *kingStatus(bool color)
     return {{false, false, false}, {false, false, false}, {false, false, false}};
 }
 
-static *getCheckVector()
+/**
+ * @brief Get the Valid Moves piece at row col MICHAEL AND BEN
+ *
+ * @param row
+ * @param col
+ * @return move_t*
+ */
+static move_t *getValidMoves(int row, int col)
+{
+}
+
+/**
+ * @brief Get the Check Vector object
+ *
+ * @param row
+ * @param col
+ * @return move_t*
+ */
+static move_t *getCheckVector(int row, int col)
 {
 }
 
