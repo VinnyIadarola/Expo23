@@ -19,7 +19,7 @@ move_t movelist[27];
 bool currTurn;
 
 /**
- * @brief This enum contai ns every peice type for a chessboard/checkers game
+ * @brief This enum contains every piece type for a chessboard/checkers game
  * an empty square will be notated by the EMPTY enum then all other values
  * should be ignored
  *
