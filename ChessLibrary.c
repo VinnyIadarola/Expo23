@@ -152,3 +152,10 @@ move_t pawnPromotions()
 {
     return NULL;
 }
+
+/**
+ * Check Draw - a player makes the same move three times in a row
+ */
+static void checkDraw()
+{
+}
