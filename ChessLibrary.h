@@ -55,7 +55,7 @@ extern piece_t board[8][8];
 
 void chessboardInit();
 
-position_t *getValidMoves(int row, int col, bool currTurn);
+void getValidMoves(int row, int col, position_t moveset[28]);
 
 void kingStatus(bool kingColor);
 

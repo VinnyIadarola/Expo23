@@ -89,7 +89,8 @@ void chessboardInit()
 }
 
 // SIGNIFY UNUSED SPOTS WITH signify unused spots with .row/.col = -1.
-
+// ALSO TREAT THE KING AS AN EMPTY AND KEEP MOVING THROUGH WHEN YOU FIND IT
+// it makes my king job alot easier for not alot of work
 /**
  * @brief Pawn Max
  *
@@ -148,6 +149,20 @@ static void validQueenMoves(int row, int col, position_t moveset[28])
 }
 
 /**
+ * @brief checks if the sides of the currrent side's row is being attack or not
+ * to determine if its castable. The first bool value is the west side castle and
+ * second is the east side
+ *
+ * @return true if castle is a valid move
+ * @return false if castling is not a vlid move
+ */
+
+static void kingCastable(bool kingColor, bool castle[2])
+{
+    return {false, false};
+}
+
+/**
  * @brief Get the Valid Moves piece at row col MICHAEL AND BEN the max size of a moveset will
  * be 28
  *
@@ -159,56 +174,6 @@ static void validQueenMoves(int row, int col, position_t moveset[28])
 void getValidMoves(int row, int col, position_t moveset[28])
 {
     kingCastable();
-}
-
-/**
- * @brief checks if the sides of the currrent side's row is being attack or not
- * to determine if its castable. The first bool value is the west side castle and
- * second is the east side
- *
- * @return true if castle is a valid move
- * @return false if castling is not a vlid move
- */
-static void kingCastable(bool kingColor, bool castle[2])
-{
-    return {false, false};
-}
-
-/**
- * @brief Checks if any enemy pieces can move into the 3x3 array around the king
- * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
- * flags.
- *
- * @param kingColor
- */
-void kingStatus(bool kingColor)
-{
-    // position_t potentialMoves[3][3]; unsed for now since its a global variable
-    position_t attackingMoves[28];
-
-    // Sets the global var kingMoves to hold all logically valid positions
-    getKingPotentialMoves(kingColor, kingMoves);
-
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            // If board has no peices skip over it
-            if (board[i][j].piece_type == EMPTY || board[i][j].color == kingColor)
-            {
-                continue;
-            }
-
-            // Position is occupied by opposing team so get the attackers moveset
-            getValidMoves(i, j, attackingMoves);
-
-            // Check for any matches between attacking and king positions
-            compareMoveLists(attackingMoves, kingMoves);
-        }
-    }
-
-    // Set allied peices that'd result in a discover check
-    setDiscoverCheckFlags();
 }
 
 /**
@@ -232,7 +197,7 @@ static void getKingPotentialMoves(bool kingColor, position_t moveSet[3][3])
             int row = activeKing->row - 1 + i;
             int col = activeKing->col - 1 + j;
 
-            if (row >= 0 && row <= 7 && col >= 0 && col <= 7 && board[row][col].piece_type == EMPTY)
+            if (row >= 0 && row <= 7 && col >= 0 && col <= 7 && (board[row][col].piece_type == EMPTY || board[row][col].color != kingColor))
             {
                 // valid move with no piece in the way
                 moveSet[i][j].row = row;
@@ -383,10 +348,41 @@ static void setDiscoverCheckFlags(bool kingColor)
     }
 }
 
-game_state_t checkGamOver()
+/**
+ * @brief Checks if any enemy pieces can move into the 3x3 array around the king
+ * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
+ * flags.
+ *
+ * @param kingColor
+ */
+void kingStatus(bool kingColor)
 {
-    checkStalemate();
-    return CHESS;
+    // position_t potentialMoves[3][3]; unsed for now since its a global variable
+    position_t attackingMoves[28];
+
+    // Sets the global var kingMoves to hold all logically valid positions
+    getKingPotentialMoves(kingColor, kingMoves);
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            // If board has no peices skip over it
+            if (board[i][j].piece_type == EMPTY || board[i][j].color == kingColor)
+            {
+                continue;
+            }
+
+            // Position is occupied by opposing team so get the attackers moveset
+            getValidMoves(i, j, attackingMoves);
+
+            // Check for any matches between attacking and king positions
+            compareMoveLists(attackingMoves, kingMoves);
+        }
+    }
+
+    // Set allied peices that'd result in a discover check
+    setDiscoverCheckFlags(kingColor);
 }
 
 /**
@@ -398,6 +394,12 @@ game_state_t checkGamOver()
 static game_state_t checkStalemate()
 {
     return STALEMATE;
+}
+
+game_state_t checkGamOver()
+{
+    checkStalemate();
+    return CHESS;
 }
 
 /**
