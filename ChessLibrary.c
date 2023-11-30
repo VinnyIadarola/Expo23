@@ -145,38 +145,6 @@ static position_t *validQueenMoves()
 }
 
 /**
- * @brief Checks if any enemy pieces can move into the 3x3 array around the king
- * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
- * flags.
- *
- */
-void kingStatus(bool kingColor)
-{
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            position_t potentialMoves[3] = getKingPotentialMoves();
-
-            // If board has no peices skip over it
-            if (board[i][j].piece_type == EMPTY)
-            {
-                continue;
-            }
-        }
-    }
-
-    getCheckVector(1, 2);
-}
-
-static getKingPotentialMoves(bool kingColor)
-{
-    if (kingColor)
-    {
-    }
-}
-
-/**
  * @brief Get the Valid Moves piece at row col MICHAEL AND BEN
  *
  * @param row
@@ -186,17 +154,6 @@ static getKingPotentialMoves(bool kingColor)
 position_t *getValidMoves(int row, int col)
 {
     kingCastable();
-}
-
-/**
- * @brief Get the Check Vector object
- *
- * @param row
- * @param col
- * @return position_t*
- */
-static position_t *getCheckVector(int row, int col)
-{
 }
 
 /**
@@ -210,6 +167,80 @@ static position_t *getCheckVector(int row, int col)
 static bool *kingCastable(bool color)
 {
     return {false, false};
+}
+
+/**
+ * @brief Checks if any enemy pieces can move into the 3x3 array around the king
+ * and sets discovered checks flags in the king's outgoing vectors to set discoverCheck
+ * flags.
+ *
+ */
+void kingStatus(bool kingColor)
+{
+    position_t potentialMoves[3][3];
+    getKingPotentialMoves(kingColor, potentialMoves);
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+
+            // If board has no peices skip over it
+            if (board[i][j].piece_type == EMPTY)
+            {
+                continue;
+            }
+        }
+    }
+}
+
+/**
+ * @brief this edits a 2d array that contains all the potential moves a king could make on the chessboard
+ * so that it will no go off the board. However, this does not check if there is currently a piece in that position
+ * or if it is being attacked
+ *
+ * @param kingColor
+ * @param moveset
+ */
+static void getKingPotentialMoves(bool kingColor, position_t moveset[3][3])
+{
+
+    position_t *activeKing = (kingColor) ? &whiteKing : &blackKing;
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            int row = activeKing->row - 1 + i;
+            int col = activeKing->col - 1 + j;
+
+            if (row >= 0 && row <= 7 && col >= 0 && col <= 7)
+            {
+                moveset[i][j].row = row;
+                moveset[i][j].col = col;
+            }
+            else
+            {
+                moveset[i][j].row = -1;
+                moveset[i][j].col = -1;
+            }
+        }
+    }
+}
+
+/**
+ * @brief Get the Check Vector object
+ *
+ * @param row
+ * @param col
+ * @return position_t*
+ */
+static position_t *getCheckVector(int row, int col)
+{
+}
+
+static void setDiscoverCheckFlags()
+{
 }
 
 game_state_t checkGamOver()
@@ -227,10 +258,6 @@ game_state_t checkGamOver()
 static game_state_t checkStalemate()
 {
     return STALEMATE;
-}
-
-static void setDiscoverCheckFlags()
-{
 }
 
 /**
