@@ -115,7 +115,7 @@ static move_t *validRookMoves()
 }
 
 /**
- * @brief Queen KEVIN
+ * @brief Queen MAX
  *
  * @return move_t*
  */
