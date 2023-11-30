@@ -10,14 +10,15 @@
  */
 #include "ChessLibrary.h"
 
-// Should lower global var amount but thatll come when we start implementing methods but we dont have a stack so yk how it is
-
-// Interfile variable
+// This will be moves to another file but will still be global
+//  Interfile variable
 piece_t board[8][8];
 
 // Global variables
 position_t whiteKing;
 position_t blackKing;
+// this requires discussion mainly runtime checking to see how intensive it is to run through the data
+position_t kingMoves[3][3];
 
 // The line along that we being checked so we can see if there are any valid moves that can block
 position_t checkVector[6];
@@ -70,6 +71,21 @@ void chessboardInit()
     board[0][2].piece_type = board[0][5].piece_type = board[7][2].piece_type = board[7][5].piece_type = BISHOP;
     board[0][3].piece_type = board[7][3].piece_type = QUEEN;
     board[0][4].piece_type = board[7][4].piece_type = KING;
+
+    // Sets up extra king data
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            kingMoves[i][j].col = -1;
+            kingMoves[i][j].col = -1;
+        }
+    }
+
+    blackKing.row = 7;
+    kingMoves[1][1].col = whiteKing.col = blackKing.col = 4;
+    kingMoves[1][1].row = whiteKing.row = 0;
+    whiteKing.Attacked = blackKing.Attacked = false;
 }
 
 // SIGNIFY UNUSED SPOTS WITH signify unused spots with .row/.col = -1.
@@ -80,7 +96,7 @@ void chessboardInit()
  * @return *position_t
  */
 // Pawn
-static position_t *validPawnMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validPawnMoves(int row, int col, bool currTurn, position_t moveset[28])
 {
     // Implement pawn-specific logic
     return NULL;
@@ -92,7 +108,7 @@ static position_t *validPawnMoves(int row, int col, bool currTurn, position_t mo
  * @return *position_t
  */
 // Knight
-static position_t *validKnightMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validKnightMoves(int row, int col, bool currTurn, position_t moveset[28])
 {
     // Implement knight-specific logic
     return NULL;
@@ -103,7 +119,7 @@ static position_t *validKnightMoves(int row, int col, bool currTurn, position_t 
  *
  * @return *position_t
  */
-static position_t *validBishopMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validBishopMoves(int row, int col, bool currTurn, position_t moveset[28])
 {
     // Implement bishop-specific logic
     return NULL;
@@ -114,7 +130,7 @@ static position_t *validBishopMoves(int row, int col, bool currTurn, position_t 
  *
  * @return *position_t
  */
-static position_t *validRookMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validRookMoves(int row, int col, bool currTurn, position_t moveset[28])
 {
     // Implement rook-specific logic
     return NULL;
@@ -125,7 +141,7 @@ static position_t *validRookMoves(int row, int col, bool currTurn, position_t mo
  *
  * @return *position_t
  */
-static position_t *validQueenMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validQueenMoves(int row, int col, bool currTurn, position_t moveset[28])
 {
     // Implement queen-specific logic
     return NULL;
@@ -140,7 +156,7 @@ static position_t *validQueenMoves(int row, int col, bool currTurn, position_t m
  * @param col
  * @return *position_t
  */
-position_t *getValidMoves(int row, int col, bool currTurn)
+void getValidMoves(int row, int col, bool currTurn, position_t moveset[28])
 {
     kingCastable();
 }
@@ -168,6 +184,7 @@ static bool *kingCastable(bool kingColor)
 void kingStatus(bool kingColor)
 {
     position_t potentialMoves[3][3];
+    position_t attackingMoves[28];
     getKingPotentialMoves(kingColor, potentialMoves);
 
     for (int i = 0; i < 8; i++)
@@ -178,9 +195,6 @@ void kingStatus(bool kingColor)
             if (board[i][j].piece_type == EMPTY)
             {
                 continue;
-            }
-            else
-            {
             }
         }
     }
@@ -218,6 +232,16 @@ static void getKingPotentialMoves(bool kingColor, position_t moveset[3][3])
             }
         }
     }
+}
+
+/**
+ * @brief Compares two movesets and determines if any of their positions contain the same values
+ *
+ * @param attackingMoveSet
+ * @param kingMoveSet
+ */
+static void compareMoveLists(position_t attackingMoveSet[28], position_t kingMoveSet[9])
+{
 }
 
 /**
