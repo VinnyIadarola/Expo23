@@ -69,35 +69,35 @@ void chessboardInit()
 }
 
 // Pawn
-static move_t validPawnMoves()
+static move_t *validPawnMoves()
 {
     // Implement pawn-specific logic
     return NULL;
 }
 
 // Knight
-static move_t validKnightMoves()
+static move_t *validKnightMoves()
 {
     // Implement knight-specific logic
     return NULL;
 }
 
 // Bishop
-static move_t validBishopMoves()
+static move_t *validBishopMoves()
 {
     // Implement bishop-specific logic
     return NULL;
 }
 
 // Rook
-static move_t validRookMoves()
+static move_t *validRookMoves()
 {
     // Implement rook-specific logic
     return NULL;
 }
 
 // Queen
-static move_t validQueenMoves()
+static move_t *validQueenMoves()
 {
     // Implement queen-specific logic
     return NULL;
@@ -116,7 +116,7 @@ bool *kingStatus(bool color)
     return {{false, false, false}, {false, false, false}, {false, false, false}};
 }
 
-static getCheckVector()
+static *getCheckVector()
 {
 }
 
