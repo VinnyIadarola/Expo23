@@ -11,7 +11,9 @@
 #include "ChessLibrary.h"
 
 piece_t board[8][8];
+bool kingMoves[3][3];
 bool currTurn = true;
+move_t movelist[27];
 
 /**
  * @brief This function initialize the board to be the start of a chess match
