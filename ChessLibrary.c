@@ -96,7 +96,7 @@ void chessboardInit()
  * @return *position_t
  */
 // Pawn
-static void validPawnMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validPawnMoves(int row, int col, position_t moveset[28])
 {
     // Implement pawn-specific logic
     return NULL;
@@ -108,7 +108,7 @@ static void validPawnMoves(int row, int col, bool currTurn, position_t moveset[2
  * @return *position_t
  */
 // Knight
-static void validKnightMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validKnightMoves(int row, int col, position_t moveset[28])
 {
     // Implement knight-specific logic
     return NULL;
@@ -119,7 +119,7 @@ static void validKnightMoves(int row, int col, bool currTurn, position_t moveset
  *
  * @return *position_t
  */
-static void validBishopMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validBishopMoves(int row, int col, position_t moveset[28])
 {
     // Implement bishop-specific logic
     return NULL;
@@ -130,7 +130,7 @@ static void validBishopMoves(int row, int col, bool currTurn, position_t moveset
  *
  * @return *position_t
  */
-static void validRookMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validRookMoves(int row, int col, position_t moveset[28])
 {
     // Implement rook-specific logic
     return NULL;
@@ -141,7 +141,7 @@ static void validRookMoves(int row, int col, bool currTurn, position_t moveset[2
  *
  * @return *position_t
  */
-static void validQueenMoves(int row, int col, bool currTurn, position_t moveset[28])
+static void validQueenMoves(int row, int col, position_t moveset[28])
 {
     // Implement queen-specific logic
     return NULL;
@@ -156,7 +156,7 @@ static void validQueenMoves(int row, int col, bool currTurn, position_t moveset[
  * @param col
  * @return *position_t
  */
-void getValidMoves(int row, int col, bool currTurn, position_t moveset[28])
+void getValidMoves(int row, int col, position_t moveset[28])
 {
     kingCastable();
 }
@@ -169,7 +169,7 @@ void getValidMoves(int row, int col, bool currTurn, position_t moveset[28])
  * @return true if castle is a valid move
  * @return false if castling is not a vlid move
  */
-static bool *kingCastable(bool kingColor)
+static void kingCastable(bool kingColor, bool castle[2])
 {
     return {false, false};
 }
@@ -185,6 +185,8 @@ void kingStatus(bool kingColor)
 {
     // position_t potentialMoves[3][3]; unsed for now since its a global variable
     position_t attackingMoves[28];
+
+    // Sets the global var kingMoves to hold all logically valid positions
     getKingPotentialMoves(kingColor, kingMoves);
 
     for (int i = 0; i < 8; i++)
@@ -192,15 +194,21 @@ void kingStatus(bool kingColor)
         for (int j = 0; j < 8; j++)
         {
             // If board has no peices skip over it
-            if (board[i][j].piece_type == EMPTY)
+            if (board[i][j].piece_type == EMPTY || board[i][j].color == kingColor)
             {
                 continue;
             }
 
-            getValidMoves(i, j, kingColor, attackingMoves);
+            // Position is occupied by opposing team so get the attackers moveset
+            getValidMoves(i, j, attackingMoves);
+
+            // Check for any matches between attacking and king positions
             compareMoveLists(attackingMoves, kingMoves);
         }
     }
+
+    // Set allied peices that'd result in a discover check
+    setDiscoverCheckFlags();
 }
 
 /**
@@ -210,27 +218,31 @@ void kingStatus(bool kingColor)
  * @param kingColor the current king be evaulated
  * @param moveset the array that will be generated with valid moves
  */
-static void getKingPotentialMoves(bool kingColor, position_t moveset[3][3])
+static void getKingPotentialMoves(bool kingColor, position_t moveSet[3][3])
 {
-
+    // Determines which king's position to use
     position_t *activeKing = (kingColor) ? &whiteKing : &blackKing;
 
+    // Nested for loop to go through the 2d array of possible king positions
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
+            // Calculates actual row/col values that will be used for the moveSet
             int row = activeKing->row - 1 + i;
             int col = activeKing->col - 1 + j;
 
             if (row >= 0 && row <= 7 && col >= 0 && col <= 7 && board[row][col].piece_type == EMPTY)
             {
-                moveset[i][j].row = row;
-                moveset[i][j].col = col;
+                // valid move with no piece in the way
+                moveSet[i][j].row = row;
+                moveSet[i][j].col = col;
             }
             else
             {
-                moveset[i][j].row = -1;
-                moveset[i][j].col = -1;
+                // Invalid move because it's out of bounds or occupied
+                moveSet[i][j].row = -1;
+                moveSet[i][j].col = -1;
             }
         }
     }
@@ -292,7 +304,7 @@ static bool isMatchingPosition(position_t pos1, position_t pos2)
 }
 
 /**
- * @brief @brief given an attacker position and king position determines the direction of the vector
+ * @brief given an attacker position and king position determines the direction of the vector
  * (whether it needs to go east to west/north to south) then calculates the total distance it
  * needs to travel to reach the point. This sets the global variable checkVector.
  *
@@ -301,12 +313,13 @@ static bool isMatchingPosition(position_t pos1, position_t pos2)
  */
 static void getCheckVector(position_t attacker, position_t king)
 {
-    // 0 means they are in the same row/col 1 means the king is farther east and -1
-    // means the king is father west
+
+    // Determines the unit vector in which the check vector moves
     int rowDirection = (king.row > attacker.row) ? 1 : (king.row < attacker.row) ? -1
                                                                                  : 0;
     int colDirection = (king.col > attacker.col) ? 1 : (king.col < attacker.col) ? -1
                                                                                  : 0;
+    // Determines the distance needed to covor along the path from the king to attacker
     int distance = max(abs(king.row - attacker.row), abs(king.col - attacker.col));
 
     for (int i = 0; i < distance; i++)
@@ -316,8 +329,58 @@ static void getCheckVector(position_t attacker, position_t king)
     }
 }
 
-static void setDiscoverCheckFlags()
+/**
+ * @brief Set the Discover Check Flags of the peices in the board for later use when determining movement
+ * Goes through the 8 intercardinal directions until it finds the first peice and if that peice is allied
+ * sets it flag
+ *
+ * @param kingColor the current team thats being checked
+ */
+static void setDiscoverCheckFlags(bool kingColor)
 {
+    position_t *activeKing = (kingColor) ? &whiteKing : &blackKing;
+    int kingRow = activeKing->row;
+    int kingCol = activeKing->col;
+
+    // Direction in terms of unit vectors
+    int directions[8][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
+    for (int k = 0; k < 8; k++)
+    {
+        int dRow = directions[k][0];
+        int dCol = directions[k][1];
+
+        for (int step = 1; step < 8; step++)
+        {
+            int row = kingRow + step * dRow;
+            int col = kingCol + step * dCol;
+
+            // Out of bounds
+            if (row < 0 || row >= 8 || col < 0 || col >= 8)
+            {
+                break;
+            }
+
+            // Empty position
+            if (board[row][col].piece_type == EMPTY)
+            {
+                continue;
+            }
+
+            // This directions allied peice found next intercardinal direction
+            if (board[row][col].color == kingColor)
+            {
+                board[row][col].discover_check = true;
+                break;
+            }
+
+            // Enemy peice found will be handled when finding checks next intercardinal direction
+            if (board[row][col].color != kingColor)
+            {
+                break;
+            }
+        }
+    }
 }
 
 game_state_t checkGamOver()
