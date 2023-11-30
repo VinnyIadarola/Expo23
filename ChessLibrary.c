@@ -74,7 +74,7 @@ void chessboardInit()
  * @return move_t*
  */
 // Pawn
-static move_t *validPawnMoves()
+static *move_t validPawnMoves()
 {
     // Implement pawn-specific logic
     return NULL;
@@ -86,7 +86,7 @@ static move_t *validPawnMoves()
  * @return move_t*
  */
 // Knight
-static move_t *validKnightMoves()
+static *move_t validKnightMoves()
 {
     // Implement knight-specific logic
     return NULL;
@@ -97,7 +97,7 @@ static move_t *validKnightMoves()
  *
  * @return move_t*
  */
-static move_t *validBishopMoves()
+static *move_t validBishopMoves()
 {
     // Implement bishop-specific logic
     return NULL;
@@ -108,7 +108,7 @@ static move_t *validBishopMoves()
  *
  * @return move_t*
  */
-static move_t *validRookMoves()
+static *move_t validRookMoves()
 {
     // Implement rook-specific logic
     return NULL;
@@ -119,7 +119,7 @@ static move_t *validRookMoves()
  *
  * @return move_t*
  */
-static move_t *validQueenMoves()
+static *move_t validQueenMoves()
 {
     // Implement queen-specific logic
     return NULL;
@@ -133,7 +133,7 @@ static move_t *validQueenMoves()
  * @return true
  * @return false
  */
-bool *kingStatus(bool color)
+*bool kingStatus(bool color)
 {
     return {{false, false, false}, {false, false, false}, {false, false, false}};
 }
@@ -145,7 +145,7 @@ bool *kingStatus(bool color)
  * @param col
  * @return move_t*
  */
-static move_t *getValidMoves(int row, int col)
+static *move_t getValidMoves(int row, int col)
 {
 }
 
@@ -156,19 +156,17 @@ static move_t *getValidMoves(int row, int col)
  * @param col
  * @return move_t*
  */
-static move_t *getCheckVector(int row, int col)
-{
-}
+static *move_t getCheckVector(int row, int col){}
 
-/**
- * @brief checks if the sides of the currrent side's row is being attack or not
- * to determine if its castable. The first bool value is the west side castle and
- * second is the east side
- *
- * @return true if castle is a valid move
- * @return false if castling is not a vlid move
- */
-bool *kingCastable(bool color)
+    /**
+     * @brief checks if the sides of the currrent side's row is being attack or not
+     * to determine if its castable. The first bool value is the west side castle and
+     * second is the east side
+     *
+     * @return true if castle is a valid move
+     * @return false if castling is not a vlid move
+     */
+    * bool kingCastable(bool color)
 {
     return {false, false};
 }

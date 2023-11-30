@@ -88,7 +88,7 @@ typedef struct
 
 void chessboardInit();
 
-move_t *getValidMoves(int row, int col);
+*move_t getValidMoves(int row, int col);
 
 /**
  * @brief Checks if any enemy pieces can move into the 3x3 array around the king
@@ -98,7 +98,7 @@ move_t *getValidMoves(int row, int col);
  * @return true
  * @return false
  */
-bool *kingStatus();
+*bool kingStatus();
 
 game_state_t checkGamOver();
 
