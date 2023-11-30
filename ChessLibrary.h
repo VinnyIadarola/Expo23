@@ -33,7 +33,7 @@ typedef struct
 {
     uint8_t row;
     uint8_t col;
-    bool Attacked;
+    bool attacked;
 } position_t;
 
 typedef enum

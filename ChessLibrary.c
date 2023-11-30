@@ -23,7 +23,7 @@ position_t kingMoves[3][3];
 // The line along that we being checked so we can see if there are any valid moves that can block
 position_t checkVector[6];
 // Block is only a valid move if there is only one thing putting us in
-int checkAmt = 0;
+int checkAmnt = 0;
 
 /**
  * @brief This function initialize the board to be the start of a chess match
@@ -85,7 +85,7 @@ void chessboardInit()
     blackKing.row = 7;
     kingMoves[1][1].col = whiteKing.col = blackKing.col = 4;
     kingMoves[1][1].row = whiteKing.row = 0;
-    whiteKing.Attacked = blackKing.Attacked = false;
+    whiteKing.attacked = blackKing.attacked = false;
 }
 
 // SIGNIFY UNUSED SPOTS WITH signify unused spots with .row/.col = -1.
@@ -237,68 +237,82 @@ static void getKingPotentialMoves(bool kingColor, position_t moveset[3][3])
 }
 
 /**
- * @brief Compares two movesets and determines if any of their positions match
- * if they do set the kingMoveSet positions to attacked and if it is the center
- * position of the kingMoveSet then increment the checkamnt
+ * @brief Runs through two arrays of position_t and compares each value looking for a match. If there is a
+ * match sets the kingMoveSet position at the match .attacked = true. If this position also is the king's
+ * position it will increment the amount of checks counter and for the first check calculates the vector
+ * between them.
  *
- * @param attackingMoveSet
- * @param kingMoveSet
+ * @param attackingMoveSet the move set of the current turns peice
+ * @param kingMoveSet the king that is being evaulated and
  */
 static void compareMoveLists(position_t attackingMoveSet[28], position_t kingMoveSet[9])
 {
 
+    // Outer Comparison for the attackingMoveSet array
     for (int i = 0; i < 28; i++)
     {
+        // When we reach unused positions, break out to stop comparing
         if (attackingMoveSet[i].row == -1)
         {
             break;
         }
 
+        // Run through the king moves to see if theres a match
         for (int j = 0; j < 9; j++)
         {
-            if (kingMoveSet[j].row == -1)
+            // If this is an invalid king position or these positions dont match continue to next position
+            if (kingMoveSet[j].row == -1 || !isMatchingPosition(kingMoveSet[j], attackingMoveSet[i]))
             {
                 continue;
             }
 
-            if ((kingMoveSet[j].col == attackingMoveSet[i].col) && (kingMoveSet[j].row == attackingMoveSet[i].row))
+            // the king position matched so it is being attacked
+            kingMoveSet[j].attacked = true;
+            // If we are looking at the king position then checkAmnt increases
+            if (j == 4 && checkAmnt++ == 0)
             {
-                kingMoveSet[j].Attacked = true;
-
-                if (j == 4)
-                {
-                    checkAmt++;
-                    if (checkAmt == 1)
-                    {
-                        getCheckVector(attackingMoveSet[i].row, attackingMoveSet[i].col, kingMoveSet[i].row, kingMoveSet[i].col);
-                    }
-                }
+                // Only run this for the first time checked
+                getCheckVector(attackingMoveSet[i], kingMoveSet[j]);
             }
         }
     }
 }
 
 /**
- * @brief Get the Check Vector object
+ * @brief Checks if two given position structs have the same row and col values
  *
- * @param row
- * @param col
- * @return position_t*
+ * @param pos1 the first position given that will be compared
+ * @param pos2 the second position given that will be compared
+ * @return true if the positions are identical
+ * @return false if the positions are not identical
  */
-static void getCheckVector(int attackingRow, int attackingCol, int kingRow, int kingCol)
+static bool isMatchingPosition(position_t pos1, position_t pos2)
+{
+    return pos1.col == pos2.col && pos1.row == pos2.row;
+}
+
+/**
+ * @brief @brief given an attacker position and king position determines the direction of the vector
+ * (whether it needs to go east to west/north to south) then calculates the total distance it
+ * needs to travel to reach the point. This sets the global variable checkVector.
+ *
+ * @param attacker the peice putting the king in check's position
+ * @param king the king's position
+ */
+static void getCheckVector(position_t attacker, position_t king)
 {
     // 0 means they are in the same row/col 1 means the king is farther east and -1
     // means the king is father west
-    int rowDirection = (kingRow > attackingRow) ? 1 : (kingRow < attackingRow) ? -1
-                                                                               : 0;
-    int colDirection = (kingCol > attackingCol) ? 1 : (kingCol < attackingCol) ? -1
-                                                                               : 0;
-    int distance = max(abs(kingRow - attackingRow), abs(kingCol - attackingCol));
+    int rowDirection = (king.row > attacker.row) ? 1 : (king.row < attacker.row) ? -1
+                                                                                 : 0;
+    int colDirection = (king.col > attacker.col) ? 1 : (king.col < attacker.col) ? -1
+                                                                                 : 0;
+    int distance = max(abs(king.row - attacker.row), abs(king.col - attacker.col));
 
     for (int i = 0; i < distance; i++)
     {
-        checkVector[i].row = attackingRow + i * rowDirection;
-        checkVector[i].col = attackingCol + i * colDirection;
+        checkVector[i].row = attacker.row + i * rowDirection;
+        checkVector[i].col = attacker.col + i * colDirection;
     }
 }
 
