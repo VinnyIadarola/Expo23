@@ -10,17 +10,23 @@
  */
 #include "ChessLibrary.h"
 
-piece_t board[8][8];
-bool kingMoves[3][3];
-bool currTurn = true;
+// Should lower global var amount but thatll come when we start implementing methods but we dont have a stack so yk how it is
+
+// Interfile variables
 position_t movelist[27];
+bool currTurn = true;
+
+// Global variables
+bool kingMoves[3][3];
+piece_t board[8][8];
+bool kingInCheck;
 position_t whiteKing;
 position_t blackKing;
 
 // The line along that we being checked so we can see if there are any valid moves that can block
 position_t checkVector[6];
-// Block is only a valid move if there is only one thing putting us in check
-bool singleCheck;
+// Block is only a valid move if there is only one thing putting us in
+static bool singleCheck;
 
 /**
  * @brief This function initialize the board to be the start of a chess match
@@ -76,7 +82,7 @@ void chessboardInit()
  * @return *position_t
  */
 // Pawn
-static *position_t validPawnMoves()
+static position_t *validPawnMoves()
 {
     // Implement pawn-specific logic
     return NULL;
@@ -88,7 +94,7 @@ static *position_t validPawnMoves()
  * @return *position_t
  */
 // Knight
-static *position_t validKnightMoves()
+static position_t *validKnightMoves()
 {
     // Implement knight-specific logic
     return NULL;
@@ -99,7 +105,7 @@ static *position_t validKnightMoves()
  *
  * @return *position_t
  */
-static *position_t validBishopMoves()
+static position_t *validBishopMoves()
 {
     // Implement bishop-specific logic
     return NULL;
@@ -110,7 +116,7 @@ static *position_t validBishopMoves()
  *
  * @return *position_t
  */
-static *position_t validRookMoves()
+static position_t *validRookMoves()
 {
     // Implement rook-specific logic
     return NULL;
@@ -121,7 +127,7 @@ static *position_t validRookMoves()
  *
  * @return *position_t
  */
-static *position_t validQueenMoves()
+static position_t *validQueenMoves()
 {
     // Implement queen-specific logic
     return NULL;
@@ -135,8 +141,9 @@ static *position_t validQueenMoves()
  * @return true
  * @return false
  */
-*bool kingStatus(bool color)
+bool *kingStatus(bool color)
 {
+    getCheckVector();
     return {{false, false, false}, {false, false, false}, {false, false, false}};
 }
 
@@ -147,8 +154,9 @@ static *position_t validQueenMoves()
  * @param col
  * @return *position_t
  */
-static *position_t getValidMoves(int row, int col)
+position_t *getValidMoves(int row, int col)
 {
+    kingCastable();
 }
 
 /**
@@ -158,25 +166,26 @@ static *position_t getValidMoves(int row, int col)
  * @param col
  * @return *position_t
  */
-static *position_t getCheckVector(int row, int col){
-
+static position_t *getCheckVector(int row, int col)
+{
 }
 
-    /**
-     * @brief checks if the sides of the currrent side's row is being attack or not
-     * to determine if its castable. The first bool value is the west side castle and
-     * second is the east side
-     *
-     * @return true if castle is a valid move
-     * @return false if castling is not a vlid move
-     */
-    * bool kingCastable(bool color)
+/**
+ * @brief checks if the sides of the currrent side's row is being attack or not
+ * to determine if its castable. The first bool value is the west side castle and
+ * second is the east side
+ *
+ * @return true if castle is a valid move
+ * @return false if castling is not a vlid move
+ */
+static bool *kingCastable(bool color)
 {
     return {false, false};
 }
 
 game_state_t checkGamOver()
 {
+    checkStalemate();
     return CHESS;
 }
 
@@ -191,7 +200,7 @@ static game_state_t checkStalemate()
     return STALEMATE;
 }
 
-static void setKingDiscoverKing()
+static void setDiscoverCheckFlags()
 {
 }
 
@@ -203,7 +212,7 @@ static void setKingDiscoverKing()
  */
 position_t pawnPromotions()
 {
-    return NULL;
+    return nullptr;
 }
 
 /**
@@ -211,4 +220,5 @@ position_t pawnPromotions()
  */
 static game_state_t checkDraw()
 {
+    static position_t prevMove;
 }

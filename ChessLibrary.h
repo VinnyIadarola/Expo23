@@ -8,15 +8,15 @@
  * @copyright Copyright (c) 2023
  *
  */
+#ifndef __CHESSLIBRARY_H__
+#define __CHESSLIBRARY_H__
+
 #include "GameEngine.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-
-position_t movelist[27];
-bool currTurn;
 
 /**
  * @brief This enum contains every piece type for a chessboard/checkers game
@@ -36,16 +36,15 @@ typedef enum
 } chess_piece_name_t;
 
 /**
- * @brief This enum clarifies which game state the baord is currently running
+ * @brief The position_t struct helps pass information to the firmware
  *
  */
-typedef enum
+typedef struct
 {
-    CHESS,
-    WHITE_WINS,
-    BLACK_WINS,
-    STALEMATE,
-} game_state_t;
+    uint8_t row;
+    uint8_t col;
+    bool Attacked;
+} position_t;
 
 /**
  * @brief The special_moves_t is an enum to help determine special case moves in the game running. In chess these cases inlcude en passant,
@@ -75,20 +74,12 @@ typedef struct
     bool discover_check;
 } piece_t;
 
-/**
- * @brief The position_t struct helps pass information to the firmware
- *
- */
-typedef struct
-{
-    uint8_t row;
-    uint8_t col;
-    bool Attacked;
-} position_t;
+position_t movelist[27];
+bool currTurn;
 
 void chessboardInit();
 
-*position_t getValidMoves(int row, int col);
+position_t *getValidMoves(int row, int col);
 
 /**
  * @brief Checks if any enemy pieces can move into the 3x3 array around the king
@@ -98,10 +89,13 @@ void chessboardInit();
  * @return true
  * @return false
  */
-*bool kingStatus();
+bool *kingStatus();
 
-game_state_t checkGamOver();
+game_state_t checkGameOver();
 
-position
-    _t
-    pawnPromotions();
+position_t pawnPromotions();
+
+position_t movelist[27];
+bool currTurn = true;
+
+#endif
