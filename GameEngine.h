@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2023
  *
  */
+
 #include "ChessLibrary.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -22,6 +23,6 @@ uint8_t blackSec;
 
 void pollForMove();
 void waitMove();
-void turnOnLights(*move_t lightArray);
+void turnOnLights(move_t *lightArray);
 void displayBadMove();
 void setTimers();
