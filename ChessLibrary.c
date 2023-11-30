@@ -23,7 +23,7 @@ position_t kingMoves[3][3];
 // The line along that we being checked so we can see if there are any valid moves that can block
 position_t checkVector[6];
 // Block is only a valid move if there is only one thing putting us in
-bool singleCheck;
+int checkAmt = 0;
 
 /**
  * @brief This function initialize the board to be the start of a chess match
@@ -183,9 +183,9 @@ static bool *kingCastable(bool kingColor)
  */
 void kingStatus(bool kingColor)
 {
-    position_t potentialMoves[3][3];
+    // position_t potentialMoves[3][3]; unsed for now since its a global variable
     position_t attackingMoves[28];
-    getKingPotentialMoves(kingColor, potentialMoves);
+    getKingPotentialMoves(kingColor, kingMoves);
 
     for (int i = 0; i < 8; i++)
     {
@@ -196,14 +196,16 @@ void kingStatus(bool kingColor)
             {
                 continue;
             }
+
+            getValidMoves(i, j, kingColor, attackingMoves);
+            compareMoveLists(attackingMoves, kingMoves);
         }
     }
 }
 
 /**
  * @brief this edits a 2d array that contains all the potential moves a king could make on the chessboard
- * so that it will no go off the board. However, this does not check if there is currently a piece in that position
- * or if it is being attacked
+ * so that it will no go off the board. does not check if it is being attacked
  *
  * @param kingColor the current king be evaulated
  * @param moveset the array that will be generated with valid moves
@@ -220,7 +222,7 @@ static void getKingPotentialMoves(bool kingColor, position_t moveset[3][3])
             int row = activeKing->row - 1 + i;
             int col = activeKing->col - 1 + j;
 
-            if (row >= 0 && row <= 7 && col >= 0 && col <= 7)
+            if (row >= 0 && row <= 7 && col >= 0 && col <= 7 && board[row][col].piece_type == EMPTY)
             {
                 moveset[i][j].row = row;
                 moveset[i][j].col = col;
@@ -235,13 +237,45 @@ static void getKingPotentialMoves(bool kingColor, position_t moveset[3][3])
 }
 
 /**
- * @brief Compares two movesets and determines if any of their positions contain the same values
+ * @brief Compares two movesets and determines if any of their positions match
+ * if they do set the kingMoveSet positions to attacked and if it is the center
+ * position of the kingMoveSet then increment the checkamnt
  *
  * @param attackingMoveSet
  * @param kingMoveSet
  */
 static void compareMoveLists(position_t attackingMoveSet[28], position_t kingMoveSet[9])
 {
+
+    for (int i = 0; i < 28; i++)
+    {
+        if (attackingMoveSet[i].row == -1)
+        {
+            break;
+        }
+
+        for (int j = 0; j < 9; j++)
+        {
+            if (kingMoveSet[j].row == -1)
+            {
+                continue;
+            }
+
+            if ((kingMoveSet[j].col == attackingMoveSet[i].col) && (kingMoveSet[j].row == attackingMoveSet[i].row))
+            {
+                kingMoveSet[j].Attacked = true;
+
+                if (j == 4)
+                {
+                    checkAmt++;
+                    if (checkAmt == 1)
+                    {
+                        getCheckVector(attackingMoveSet[i].row, attackingMoveSet[i].col, kingMoveSet[i].row, kingMoveSet[i].col);
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -251,8 +285,21 @@ static void compareMoveLists(position_t attackingMoveSet[28], position_t kingMov
  * @param col
  * @return position_t*
  */
-static position_t *getCheckVector(int row, int col)
+static void getCheckVector(int attackingRow, int attackingCol, int kingRow, int kingCol)
 {
+    // 0 means they are in the same row/col 1 means the king is farther east and -1
+    // means the king is father west
+    int rowDirection = (kingRow > attackingRow) ? 1 : (kingRow < attackingRow) ? -1
+                                                                               : 0;
+    int colDirection = (kingCol > attackingCol) ? 1 : (kingCol < attackingCol) ? -1
+                                                                               : 0;
+    int distance = max(abs(kingRow - attackingRow), abs(kingCol - attackingCol));
+
+    for (int i = 0; i < distance; i++)
+    {
+        checkVector[i].row = attackingRow + i * rowDirection;
+        checkVector[i].col = attackingCol + i * colDirection;
+    }
 }
 
 static void setDiscoverCheckFlags()
