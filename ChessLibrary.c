@@ -15,6 +15,11 @@ bool kingMoves[3][3];
 bool currTurn = true;
 move_t movelist[27];
 
+// The line along that we being checked so we can see if there are any valid moves that can block
+move_t checkVector[6];
+// Block is only a valid move if there is only one thing putting us in check
+bool singleCheck;
+
 /**
  * @brief This function initialize the board to be the start of a chess match
  * white peices are row < 1 and Black peices are row > 6
@@ -109,6 +114,10 @@ static move_t validQueenMoves()
 bool *kingStatus(bool color)
 {
     return {{false, false, false}, {false, false, false}, {false, false, false}};
+}
+
+static getCheckVector()
+{
 }
 
 /**
