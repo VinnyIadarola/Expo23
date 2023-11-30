@@ -13,10 +13,12 @@
 piece_t board[8][8];
 bool kingMoves[3][3];
 bool currTurn = true;
-move_t movelist[27];
+position_t movelist[27];
+position_t whiteKing;
+position_t blackKing;
 
 // The line along that we being checked so we can see if there are any valid moves that can block
-move_t checkVector[6];
+position_t checkVector[6];
 // Block is only a valid move if there is only one thing putting us in check
 bool singleCheck;
 
@@ -71,10 +73,10 @@ void chessboardInit()
 /**
  * @brief Pawn Max
  *
- * @return move_t*
+ * @return *position_t
  */
 // Pawn
-static *move_t validPawnMoves()
+static *position_t validPawnMoves()
 {
     // Implement pawn-specific logic
     return NULL;
@@ -83,10 +85,10 @@ static *move_t validPawnMoves()
 /**
  * @brief Knight Michael
  *
- * @return move_t*
+ * @return *position_t
  */
 // Knight
-static *move_t validKnightMoves()
+static *position_t validKnightMoves()
 {
     // Implement knight-specific logic
     return NULL;
@@ -95,9 +97,9 @@ static *move_t validKnightMoves()
 /**
  * @brief Bishop BEN
  *
- * @return move_t*
+ * @return *position_t
  */
-static *move_t validBishopMoves()
+static *position_t validBishopMoves()
 {
     // Implement bishop-specific logic
     return NULL;
@@ -106,9 +108,9 @@ static *move_t validBishopMoves()
 /**
  * @brief Rook KEVIN
  *
- * @return move_t*
+ * @return *position_t
  */
-static *move_t validRookMoves()
+static *position_t validRookMoves()
 {
     // Implement rook-specific logic
     return NULL;
@@ -117,9 +119,9 @@ static *move_t validRookMoves()
 /**
  * @brief Queen MAX
  *
- * @return move_t*
+ * @return *position_t
  */
-static *move_t validQueenMoves()
+static *position_t validQueenMoves()
 {
     // Implement queen-specific logic
     return NULL;
@@ -143,9 +145,9 @@ static *move_t validQueenMoves()
  *
  * @param row
  * @param col
- * @return move_t*
+ * @return *position_t
  */
-static *move_t getValidMoves(int row, int col)
+static *position_t getValidMoves(int row, int col)
 {
 }
 
@@ -154,9 +156,11 @@ static *move_t getValidMoves(int row, int col)
  *
  * @param row
  * @param col
- * @return move_t*
+ * @return *position_t
  */
-static *move_t getCheckVector(int row, int col){}
+static *position_t getCheckVector(int row, int col){
+
+}
 
     /**
      * @brief checks if the sides of the currrent side's row is being attack or not
@@ -195,9 +199,9 @@ static void setKingDiscoverKing()
  * @brief checks if the northmost and southern most rows contain any pawns
  * that need to promote
  *
- * @return move_t
+ * @return position_t
  */
-move_t pawnPromotions()
+position_t pawnPromotions()
 {
     return NULL;
 }

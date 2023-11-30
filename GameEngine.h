@@ -23,6 +23,6 @@ uint8_t blackSec;
 
 void pollForMove();
 void waitMove();
-void turnOnLights(move_t *lightArray);
+void turnOnLights(position_t *lightArray);
 void displayBadMove();
 void setTimers();

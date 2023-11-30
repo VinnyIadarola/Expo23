@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-move_t movelist[27];
+position_t movelist[27];
 bool currTurn;
 
 /**
@@ -76,19 +76,19 @@ typedef struct
 } piece_t;
 
 /**
- * @brief The move_t struct helps pass information to the firmware
+ * @brief The position_t struct helps pass information to the firmware
  *
  */
 typedef struct
 {
     uint8_t row;
     uint8_t col;
-    bool isAttacking;
-} move_t;
+    bool Attacked;
+} position_t;
 
 void chessboardInit();
 
-*move_t getValidMoves(int row, int col);
+*position_t getValidMoves(int row, int col);
 
 /**
  * @brief Checks if any enemy pieces can move into the 3x3 array around the king
@@ -102,4 +102,6 @@ void chessboardInit();
 
 game_state_t checkGamOver();
 
-move_t pawnPromotions();
+position
+    _t
+    pawnPromotions();
