@@ -1,6 +1,6 @@
 /**
  * @file ChessLibrary.c
- * @author Vinceent Iadarola KHK Expo
+ * @author Vincent Iadarola KHK Expo
  * @brief
  * @version 0.1
  * @date 2023-09-16

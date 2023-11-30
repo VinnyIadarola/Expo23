@@ -3,9 +3,9 @@ white's clock starts
 
 white picks up piece
 display piece moves
-white places their peice
+white places their piece
     if invalid move do not allow
-    if  valid move piece
+    if valid move piece
 white hits timer and stops theirs
 check black king's Status
 change turns or end game
@@ -13,7 +13,7 @@ change turns or end game
 if black is human repeat white
 robot black turn
 display rand time of thinking
-highlight peice and where to move
+highlight piece and where to move
 display acknowledge of move made then stop black timer
 change turns or end game
 
@@ -34,7 +34,7 @@ display piece moves
     calculate based on peice what squares to light up
         red if attacking white if not attacking
 
-white places their peice
+white places their piece
     if invalid move do not allow
         invalid - not possible | king is in check and does not take/block attacker
     if  valid move piece
