@@ -47,7 +47,11 @@ typedef struct
     chess_piece_name_t piece_type;
     bool color;
     special_moves_t special_status;
-    bool discover_check;
+
+    // Will be one of these to denote directions {rowdir, coldir}
+    // This is direction from king to allied peice
+    //{{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    int discover_check_uv[2];
 } piece_t;
 
 extern piece_t board[8][8];

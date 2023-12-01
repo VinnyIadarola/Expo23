@@ -339,7 +339,7 @@ static void setDiscoverCheckFlags(bool kingColor)
             // This directions allied peice found next intercardinal direction
             if (board[row][col].color == kingColor)
             {
-                board[row][col].discover_check = true;
+                board[row][col].discover_check_uv = directions[k];
                 break;
             }
 
