@@ -40,7 +40,6 @@ typedef enum
 {
     EN_PASSANTABLE,
     FIRST_MOVE,
-    CASTLEABLE,
 } special_moves_t;
 
 typedef struct

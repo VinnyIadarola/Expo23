@@ -9,6 +9,7 @@
  *
  */
 #include "ChessLibrary.h"
+#define max(a, b) ((a) > (b) ? (a) : (b))
 
 // This will be moves to another file but will still be global
 //  Interfile variable
@@ -159,7 +160,7 @@ static void validQueenMoves(int row, int col, position_t moveset[28])
 
 static void kingCastable(bool kingColor, bool castle[2])
 {
-    return {false, false};
+    // return {false, false};
 }
 
 /**
@@ -173,7 +174,7 @@ static void kingCastable(bool kingColor, bool castle[2])
  */
 void getValidMoves(int row, int col, position_t moveset[28])
 {
-    kingCastable();
+    // kingCastable();
 }
 
 /**
@@ -199,7 +200,7 @@ static void getKingPotentialMoves(bool kingColor, position_t moveSet[3][3])
 
             if (row >= 0 && row <= 7 && col >= 0 && col <= 7 && (board[row][col].piece_type == EMPTY || board[row][col].color != kingColor))
             {
-                // valid move with no piece in the way
+                // valid move with no piece in the way or enemy peice so you can take (uses short circuiting)
                 moveSet[i][j].row = row;
                 moveSet[i][j].col = col;
             }
@@ -208,48 +209,6 @@ static void getKingPotentialMoves(bool kingColor, position_t moveSet[3][3])
                 // Invalid move because it's out of bounds or occupied
                 moveSet[i][j].row = -1;
                 moveSet[i][j].col = -1;
-            }
-        }
-    }
-}
-
-/**
- * @brief Runs through two arrays of position_t and compares each value looking for a match. If there is a
- * match sets the kingMoveSet position at the match .attacked = true. If this position also is the king's
- * position it will increment the amount of checks counter and for the first check calculates the vector
- * between them.
- *
- * @param attackingMoveSet the move set of the current turns peice
- * @param kingMoveSet the king that is being evaulated and
- */
-static void compareMoveLists(position_t attackingMoveSet[28], position_t kingMoveSet[9])
-{
-
-    // Outer Comparison for the attackingMoveSet array
-    for (int i = 0; i < 28; i++)
-    {
-        // When we reach unused positions, break out to stop comparing
-        if (attackingMoveSet[i].row == -1)
-        {
-            break;
-        }
-
-        // Run through the king moves to see if theres a match
-        for (int j = 0; j < 9; j++)
-        {
-            // If this is an invalid king position or these positions dont match continue to next position
-            if (kingMoveSet[j].row == -1 || !isMatchingPosition(kingMoveSet[j], attackingMoveSet[i]))
-            {
-                continue;
-            }
-
-            // the king position matched so it is being attacked
-            kingMoveSet[j].attacked = true;
-            // If we are looking at the king position then checkAmnt increases
-            if (j == 4 && checkAmnt++ == 0)
-            {
-                // Only run this for the first time checked
-                getCheckVector(attackingMoveSet[i], kingMoveSet[j]);
             }
         }
     }
@@ -291,6 +250,51 @@ static void getCheckVector(position_t attacker, position_t king)
     {
         checkVector[i].row = attacker.row + i * rowDirection;
         checkVector[i].col = attacker.col + i * colDirection;
+    }
+}
+
+/**
+ * @brief Runs through two arrays of position_t and compares each value looking for a match. If there is a
+ * match sets the kingMoveSet position at the match .attacked = true. If this position also is the king's
+ * position it will increment the amount of checks counter and for the first check calculates the vector
+ * between them.
+ *
+ * @param attackingMoveSet the move set of the current turns peice
+ * @param kingMoveSet the king that is being evaulated and
+ */
+static void compareMoveLists(position_t attackingMoveSet[28], position_t kingMoveSet[3][3])
+{
+    // Outer Comparison for the attackingMoveSet array
+    for (int i = 0; i < 28; i++)
+    {
+        // When we reach unused positions, break out to stop comparing
+        if (attackingMoveSet[i].row == -1)
+        {
+            break;
+        }
+
+        // Run through the king moves to see if there's a match
+        for (int row = 0; row < 3; row++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                // If this is an invalid king position or these positions don't match, continue to next position
+                if (kingMoveSet[row][col].row == -1 || !isMatchingPosition(kingMoveSet[row][col], attackingMoveSet[i]))
+                {
+                    continue;
+                }
+
+                // The king position matched so it is being attacked
+                kingMoveSet[row][col].attacked = true;
+
+                // If we are looking at the king's central position, then checkAmnt increases
+                if (row * 3 + col == 4 && checkAmnt++ == 0)
+                {
+                    // Only run this for the first time checked
+                    getCheckVector(attackingMoveSet[i], kingMoveSet[row][col]);
+                }
+            }
+        }
     }
 }
 
@@ -410,7 +414,7 @@ game_state_t checkGamOver()
  */
 position_t pawnPromotions()
 {
-    return nullptr;
+    // return nullptr;
 }
 
 /**

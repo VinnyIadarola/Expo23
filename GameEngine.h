@@ -32,16 +32,16 @@ typedef enum
     STALEMATE,
 } game_state_t;
 
-uint8_t whiteMin;
-uint8_t whiteSec;
-uint8_t blackMin;
-uint8_t blackSec;
+// extern uint8_t whiteMin;
+// extern uint8_t whiteSec;
+// extern uint8_t blackMin;
+// extern uint8_t blackSec;
 
-bool currTurn;
+// bool currTurn;
 
 void pollForMove();
 void waitMove();
-void turnOnLights(position_t *lightArray);
+// void turnOnLights(position_t *lightArray);
 void displayBadMove();
 void setTimers();
 
