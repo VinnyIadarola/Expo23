@@ -113,6 +113,92 @@ static void validPawnMoves(int row, int col, position_t moveset[28])
 static void validKnightMoves(int row, int col, position_t moveset[28])
 {
     // Implement knight-specific logic
+    //Knight has 8 possible unique moves
+    //Check if the current position of knight allows for such moves
+    int move_index = 0; //counter to track the index of valid moves this knight has
+    //if checkamnt is 0 the piece can freely move, if its 1 compare the moveset with check vector, and if its > 1 return current position
+    if (checkAmnt > 1) {
+        moveset[0].row = row;
+        moveset[0].col = col;
+        return;
+    }
+
+    //Two forward, one left
+    if (row >= 2 && col >= 1) {
+        row = row - 2;
+        col = col - 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+    //Two forward, one right
+    if (row >= 2 && col <= 6) {
+        row = row - 2;
+        col = col + 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+    //Two backward, one left
+    if (row <= 5 && col >= 1) {
+        row = row + 2;
+        col = col - 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+    //Two backward, one right
+    if (row <= 5 && col <= 6) {
+        row = row + 2;
+        col = col + 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+
+    //Two left, one forward
+    if (col >= 2 && row >= 1) {
+        row = row - 1;
+        col = col - 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+    //Two right, one forward
+    if (col <= 5 && row >= 1) {
+        row = row - 1;
+        col = col + 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+    //Two left, one backward
+    if (col >= 2 && row <= 6) {
+        row = row + 1;
+        col = col - 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+    //Two right, one backward
+    if (col <= 5 && row <= 6) {
+        row = row + 1;
+        col = col + 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+    if (checkAmnt == 1) {
+        for (int i = 0; i < move_index; i++) {
+            for (int j = 0; j < (int)sizeof(checkVector); j++) {
+                if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col) {
+                    moveset[i].row = NULL;
+                    moveset[i].col = NULL;
+                }
+            } 
+        }
+    }
+
     return NULL;
 }
 
