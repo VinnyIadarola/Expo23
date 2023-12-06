@@ -465,14 +465,40 @@ static void validRookMoves(int row, int col, position_t moveset[28])
 
     //Valid moves of Rook
     for(int i = 0; i<8; i++){
-        //for the horizontal; row
-        moveset[move_index].row = row;
-        moveset[move_index].col = i;
-        move_index++;
-        //for the vertical; column
-        moveset[move_index].row = i;
-        moveset[move_index].col = col;
-        move_index++;
+        //for the horizontal valid moves; row
+        if (board[i][col].piece_type != EMPTY) {
+            if (board[i][col].color != board[row][col].color) {
+                moveset[moveIndex].row = i;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[i][col].piece_type == EMPTY) { 
+            moveset[moveIndex].row = i;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+        //for the vertical valid moves; column
+        if (board[row][i].piece_type != EMPTY) {
+            if (board[row][i].color != board[row][col].color) {
+                moveset[moveIndex].row = row;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[row][i].piece_type == EMPTY) { 
+            moveset[moveIndex].row = row;
+            moveset[moveIndex].col = i;
+            moveIndex++;
+        }
     }
 
     //Case if checkAmnt is 1
