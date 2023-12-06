@@ -221,6 +221,42 @@ static void validBishopMoves(int row, int col, position_t moveset[28])
 static void validRookMoves(int row, int col, position_t moveset[28])
 {
     // Implement rook-specific logic
+    //Rook has a max of 16 total moves
+    //Check if the current position of the Rook allows for such moves
+    int move_index = 0; //counter to track the index of valid moves this Rook has
+    //if checkAmnt is 0, the piece can freely move, if it's 1 compare the moveset with check vector, and if its > 1 return current position
+
+    //Case if checkAmnt bigger than 1
+    if (checkAmnt > 1) {
+        moveset[0].row = row;
+        moveset[0].col = col;
+        return;
+    }
+
+    //Valid moves of Rook
+    for(int i = 0; i<8; i++){
+        //for the horizontal; row
+        moveset[move_index].row = row;
+        moveset[move_index].col = i;
+        move_index++;
+        //for the vertical; column
+        moveset[move_index].row = i;
+        moveset[move_index].col = col;
+        move_index++;
+    }
+
+    //Case if checkAmnt is 1
+    if (checkAmnt == 1) {
+        for (int i = 0; i < move_index; i++) {
+            for (int j = 0; j < (int)sizeof(checkVector); j++) {
+                if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col) {
+                    moveset[i].row = NULL;
+                    moveset[i].col = NULL;
+                }
+            } 
+        }
+    }
+
     return NULL;
 }
 
