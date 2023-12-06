@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/viada/projects/Expo C  Folder/Expo24",
-      "program": "c:/Users/viada/projects/Expo C  Folder/Expo24/build/Debug/outDebug",
+      "cwd": "c:/Users/Kevin/Vinny Expo/Expo24",
+      "program": "c:/Users/Kevin/Vinny Expo/Expo24/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
