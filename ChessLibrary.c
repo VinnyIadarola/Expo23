@@ -290,170 +290,142 @@ static void validPawnMoves(int row, int col, position_t moveset[28])
 static void validKnightMoves(int row, int col, position_t moveset[28])
 {
     // Implement knight-specific logic
-    // Knight has 8 possible unique moves
-    // Check if the current position of knight allows for such moves
-    int move_index = 0; // counter to track the index of valid moves this knight has
-    // if checkamnt is 0 the piece can freely move, if its 1 compare the moveset with check vector, and if its > 1 return current position
-
+    //Knight has 8 possible unique moves
+    //Check if the current position of knight allows for such moves
+    int move_index = 0; //counter to track the index of valid moves this knight has
+    //if checkamnt is 0 the piece can freely move, if its 1 compare the moveset with check vector, and if its > 1 return current position
+    int curr_row = row;
+    int curr_col = col;
     bool color = board[row][col].color;
 
-    if (checkAmnt > 1)
-    {
+    if (checkAmnt > 1) {
         moveset[0].row = row;
         moveset[0].col = col;
         return;
     }
 
-    // Two forward, one left
-    if (row >= 2 && col >= 1)
-    {
-        row = row - 2;
-        col = col - 1;
+    //Two forward, one left
+    if (curr_row >= 2 && curr_col >= 1) {
+        row = curr_row - 2;
+        col = curr_col - 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].color != color)
-        {
-            moveset[move_index].attacked = true;
-        }
-        else
-        {
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
             moveset[move_index].attacked = false;
         }
-    }
-    // Two forward, one right
-    if (row >= 2 && col <= 6)
-    {
-        row = row - 2;
-        col = col + 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].color != color)
-        {
-            moveset[move_index].attacked = true;
-        }
-        else
-        {
-            moveset[move_index].attacked = false;
-        }
-    }
-    // Two backward, one left
-    if (row <= 5 && col >= 1)
-    {
-        row = row + 2;
-        col = col - 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
-        {
-            moveset[move_index].attacked = false;
-        }
-        else
-        {
+        else {
             moveset[move_index].attacked = true;
         }
     }
-    // Two backward, one right
-    if (row <= 5 && col <= 6)
-    {
-        row = row + 2;
-        col = col + 1;
+    //Two forward, one right
+    if (curr_row >= 2 && curr_col <= 6) {
+        row = curr_row - 2;
+        col = curr_col + 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
-        {
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
             moveset[move_index].attacked = false;
         }
-        else
-        {
+        else {
+            moveset[move_index].attacked = true;
+        }
+    }
+    //Two backward, one left
+    if (curr_row <= 5 && curr_col >= 1) {
+        row = curr_row + 2;
+        col = curr_col - 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
+    }
+    //Two backward, one right
+    if (curr_row <= 5 && curr_col <= 6) {
+        row = curr_row + 2;
+        col = curr_col + 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
             moveset[move_index].attacked = true;
         }
     }
 
-    // Two left, one forward
-    if (col >= 2 && row >= 1)
-    {
-        row = row - 1;
-        col = col - 2;
+    //Two left, one forward
+    if (curr_col >= 2 && curr_row >= 1) {
+        row = curr_row - 1;
+        col = curr_col - 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
-        {
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
             moveset[move_index].attacked = false;
         }
-        else
-        {
+        else {
             moveset[move_index].attacked = true;
         }
     }
-    // Two right, one forward
-    if (col <= 5 && row >= 1)
-    {
-        row = row - 1;
-        col = col + 2;
+    //Two right, one forward
+    if (curr_col <= 5 && curr_row >= 1) {
+        row = curr_row - 1;
+        col = curr_col + 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
-        {
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
             moveset[move_index].attacked = false;
         }
-        else
-        {
+        else {
             moveset[move_index].attacked = true;
         }
     }
-    // Two left, one backward
-    if (col >= 2 && row <= 6)
-    {
-        row = row + 1;
-        col = col - 2;
+    //Two left, one backward
+    if (curr_col >= 2 && curr_row <= 6) {
+        row = curr_row + 1;
+        col = curr_col - 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
-        {
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
             moveset[move_index].attacked = false;
         }
-        else
-        {
+        else {
             moveset[move_index].attacked = true;
         }
     }
-    // Two right, one backward
-    if (col <= 5 && row <= 6)
-    {
-        row = row + 1;
-        col = col + 2;
+    //Two right, one backward
+    if (curr_col <= 5 && curr_row <= 6) {
+        row = curr_row + 1;
+        col = curr_col + 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
-        {
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
             moveset[move_index].attacked = false;
         }
-        else
-        {
+        else {
             moveset[move_index].attacked = true;
         }
     }
 
-    if (checkAmnt == 1)
-    {
-        for (int i = 0; i < move_index; i++)
-        {
-            for (int j = 0; j < (int)sizeof(checkVector); j++)
-            {
-                if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col)
-                {
+    if (checkAmnt == 1) {
+        for (int i = 0; i < move_index; i++) {
+            for (int j = 0; j < (int)sizeof(checkVector); j++) {
+                if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col) {
                     moveset[i].row = -1;
                     moveset[i].col = -1;
                 }
-            }
+            } 
         }
     }
 
@@ -479,6 +451,69 @@ static void validBishopMoves(int row, int col, position_t moveset[28])
 static void validRookMoves(int row, int col, position_t moveset[28])
 {
     // Implement rook-specific logic
+    //Rook has a max of 16 total moves
+    //Check if the current position of the Rook allows for such moves
+    int move_index = 0; //counter to track the index of valid moves this Rook has
+    //if checkAmnt is 0, the piece can freely move, if it's 1 compare the moveset with check vector, and if its > 1 return current position
+
+    //Case if checkAmnt bigger than 1
+    if (checkAmnt > 1) {
+        moveset[0].row = row;
+        moveset[0].col = col;
+        return;
+    }
+
+    //Valid moves of Rook
+    for(int i = 0; i < 8; i++){
+        //for the horizontal valid moves; row
+        if (board[row][i].piece_type != EMPTY) {
+            if (board[row][i].color != board[row][col].color) {
+                moveset[moveIndex].row = row;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[row][i].piece_type == EMPTY) { 
+            moveset[moveIndex].row = row;
+            moveset[moveIndex].col = i;
+            moveIndex++;
+        }
+        
+        //for the vertical valid moves; column
+        if (board[i][col].piece_type != EMPTY) {
+            if (board[i][col].color != board[row][col].color) {
+                moveset[moveIndex].row = i;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[i][col].piece_type == EMPTY) { 
+            moveset[moveIndex].row = i;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+    }
+
+    //Case if checkAmnt is 1
+    if (checkAmnt == 1) {
+        for (int i = 0; i < move_index; i++) {
+            for (int j = 0; j < (int)sizeof(checkVector); j++) {
+                if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col) {
+                    moveset[i].row = NULL;
+                    moveset[i].col = NULL;
+                }
+            } 
+        }
+    }
+
     return NULL;
 }
 
