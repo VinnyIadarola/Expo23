@@ -409,6 +409,168 @@ static void validRookMoves(int row, int col, position_t moveset[28])
 static void validQueenMoves(int row, int col, position_t moveset[28])
 {
     // Implement queen-specific logic
+
+    if (board[row][col].piece_type != QUEEN) { 
+        return;
+    }
+
+    int moveIndex = 0;
+    //Traverse along unit vector {1, 0}
+    for (int i = col; i <= 8; i++) { 
+        if (board[row][i].piece_type != EMPTY) {
+            if (board[row][i].color != board[row][col].color) {
+                moveset[moveIndex].row = row;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[row][i].piece_type == EMPTY) { 
+            moveset[moveIndex].row = row;
+            moveset[moveIndex].col = i;
+            moveIndex++;
+        }
+    }
+    //Traverse along unit vector {-1, 0}
+    for (int i = col; i >= 1; i--) { 
+        if (board[row][i].piece_type != EMPTY) {
+            if (board[row][i].color != board[row][col].color) {
+                moveset[moveIndex].row = row;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[row][i].piece_type == EMPTY) { 
+            moveset[moveIndex].row = row;
+            moveset[moveIndex].col = i;
+            moveIndex++;
+        }
+    }
+    //Traverse along unit vector {0, 1}
+    for (int i = row; i <= 8; i++) { 
+        if (board[i][col].piece_type != EMPTY) {
+            if (board[i][col].color != board[i][col].color) {
+                moveset[moveIndex].row = i;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[i][col].piece_type == EMPTY) { 
+            moveset[moveIndex].row = i;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+    }
+
+    //Traverse along unit vector {0, -1}
+    bool breakOuterLoop = false;
+    for (int i = row; i >= 1 && !breakOuterLoop; i--) { 
+        if (board[i][col].piece_type != EMPTY) {
+            if (board[i][col].color != board[i][col].color) {
+                moveset[moveIndex].row = i;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                breakOuterLoop = true;
+                break;
+            }
+        }
+        else if (board[i][col].piece_type == EMPTY) { 
+            moveset[moveIndex].row = i;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+    }
+    //Traverse along unit vector {1, 1}
+    breakOuterLoop = false;
+    for (int i = col; i <= 8 && !breakOuterLoop; i++) { 
+        for (int j = row; j <= 8; j++) {
+            if (board[j][i].piece_type != EMPTY) {
+                if (board[j][i].color != board[row][col].color) {
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                break;
+                breakOuterLoop = true;
+            }
+        }
+            else if (board[j][i].piece_type == EMPTY) { 
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+            }
+        }
+    }
+
+    //Traverse along unit vector {1, -1}
+    breakOuterLoop = false;
+    for (int i = col; i <= 8 && !breakOuterLoop; i++) { 
+        for (int j = row; j >= 1; j--) {
+            if (board[j][i].piece_type != EMPTY) {
+                if (board[j][i].color != board[row][col].color) {
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                breakOuterLoop = true;
+                break;
+            }
+        }
+            else if (board[j][i].piece_type == EMPTY) { 
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+            }
+        }
+    }
+
+    //Traverse along unit vector {-1, -1}
+    breakOuterLoop = false;
+    for (int i = col; i >= 1 && !breakOuterLoop; i--) { 
+        for (int j = row; j >= 1; j--) {
+            if (board[j][i].piece_type != EMPTY) {
+                if (board[j][i].color != board[row][col].color) {
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                breakOuterLoop = true;
+                break;
+            }
+        }
+            else if (board[j][i].piece_type == EMPTY) { 
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+            }
+        }
+    }
+    
+
     return NULL;
 }
 
