@@ -48,7 +48,7 @@ typedef struct
     bool color;
     special_moves_t special_status;
 
-    // Will be one of these to denote directions {rowdir, coldir}
+    // Will be one of these to denote directions {rowdir, coldir} set to {0,0} after turn
     // This is direction from king to allied peice
     //{{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
     int discover_check_uv[2];
