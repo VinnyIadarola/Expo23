@@ -464,25 +464,8 @@ static void validRookMoves(int row, int col, position_t moveset[28])
     }
 
     //Valid moves of Rook
-    for(int i = 0; i<8; i++){
+    for(int i = 0; i < 8; i++){
         //for the horizontal valid moves; row
-        if (board[i][col].piece_type != EMPTY) {
-            if (board[i][col].color != board[row][col].color) {
-                moveset[moveIndex].row = i;
-                moveset[moveIndex].col = col;
-                moveIndex++;
-                break;
-            }
-            else { 
-                break;
-            }
-        }
-        else if (board[i][col].piece_type == EMPTY) { 
-            moveset[moveIndex].row = i;
-            moveset[moveIndex].col = col;
-            moveIndex++;
-        }
-        //for the vertical valid moves; column
         if (board[row][i].piece_type != EMPTY) {
             if (board[row][i].color != board[row][col].color) {
                 moveset[moveIndex].row = row;
@@ -497,6 +480,24 @@ static void validRookMoves(int row, int col, position_t moveset[28])
         else if (board[row][i].piece_type == EMPTY) { 
             moveset[moveIndex].row = row;
             moveset[moveIndex].col = i;
+            moveIndex++;
+        }
+        
+        //for the vertical valid moves; column
+        if (board[i][col].piece_type != EMPTY) {
+            if (board[i][col].color != board[row][col].color) {
+                moveset[moveIndex].row = i;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[i][col].piece_type == EMPTY) { 
+            moveset[moveIndex].row = i;
+            moveset[moveIndex].col = col;
             moveIndex++;
         }
     }
