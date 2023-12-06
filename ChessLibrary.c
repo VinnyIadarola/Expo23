@@ -101,6 +101,183 @@ void chessboardInit()
 static void validPawnMoves(int row, int col, position_t moveset[28])
 {
     // Implement pawn-specific logic
+
+    // Verify that the moving piece is a pawn
+    if (board[row][col].piece_type != PAWN) { 
+        return;
+    }
+
+    // Check if discover check unit vector is diagonal. Will help in determining if the moving piece is pinned or not
+    int unitVector[2] = board[row][col].discover_check_uv;
+    bool isUnitVectorDiagonal = false;
+    if ((unitVector[0] == -1 || unitVector[0] == 1) && (unitVector[1] == -1 || unitVector[1] == 1)) { 
+        isUnitVectorDiagonal = true;
+    }
+    
+    // Check if moving piece is pinned
+    bool isPinned = false;
+    bool breakOuterLoop = false;
+    int pinningPieceRow;
+    int pinningPieceCol;
+    for (int i = col; i >= 1 && i <= 8 && !breakOuterLoop; i + unitVector[0]) { 
+        for (int j = row; j >= 1 && j <= 8; j + unitVector[1]) { 
+            if (board[i][j].piece_type == QUEEN && board[i][j].color != board[row][col].color) { 
+                isPinned = true;
+                breakOuterLoop = true;
+                pinningPieceCol = i;
+                pinningPieceRow = j;
+                break;
+            }
+            else if (board[i][j].piece_type == BISHOP &&  board[i][j].color != board[row][col].color && isUnitVectorDiagonal) { 
+                isPinned = true;
+                breakOuterLoop = true;
+                pinningPieceCol = i;
+                pinningPieceRow = j;
+                break;
+            }
+            else if (board[i][j].piece_type == ROOK &&  board[i][j].color != board[row][col].color && !isUnitVectorDiagonal) { 
+                isPinned = true;
+                breakOuterLoop = true;
+                pinningPieceCol = i;
+                pinningPieceRow = j;
+                break;
+            }
+        }
+    }
+
+    int moveIndex = 0; //Counter to track the amout of moves the pawn has
+    //Finds valid WHITE pawn moves
+    if (board[row][col].color) {
+        //If square in front of moving piece is unoccupied and the moving piece is not pinned,then moving forward one square is valid
+        if (board[row + 1][col].piece_type == EMPTY && !isPinned) { 
+            moveset[moveIndex].row = row + 1;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+
+        //If square in front of moving piece is unoccupied and square two rows in front of moving piece is unoccupied,
+        //and the moving piece is not pinned, and moving pawn has first move status, then moving forward two squares is valid
+        if (board[row][col].special_status == FIRST_MOVE) { 
+            if (board[row + 2][col].piece_type == EMPTY && board[row + 1][col].piece_type == EMPTY && !isPinned) { 
+                moveset[moveIndex].row = row + 2;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+            }
+        }
+
+        //If moving piece is not on the left edge, then capturing left may be valid
+        if (col > 1) {
+            bool canCapturePinningPieceLeft = false;
+            //If the moving piece is pinned, BUT the pinning piece is one square diagonal to the moving piece, 
+            //then the moving piece can capture the pinning piece
+            if (isPinned && pinningPieceRow == row + 1 && pinningPieceCol == col - 1) { 
+                canCapturePinningPieceLeft = true;
+            }
+            
+            //If there is a black piece one square diagonal to the left of the moving piece, and the moving piece is not pinned, 
+            //then capturing left is valid. However, if the pinning piece can be captured, then capturing left is valid.
+            if ((board[row + 1][col - 1].piece_type != EMPTY && !board[row + 1][col - 1].color && !isPinned) || canCapturePinningPieceLeft) { 
+                moveset[moveIndex].row = row + 1;
+                moveset[moveIndex].col = col - 1;
+                moveIndex++;
+            }
+            //If black pawn is En Passantable, and adjacent to moving piece on the 5th row, then moving piece can capture diagonally.
+            if (board[5][col - 1].special_status == EN_PASSANTABLE && !isPinned) { 
+                moveset[moveIndex].row = row + 1;
+                moveset[moveIndex].col = col - 1;
+                moveIndex++;
+            }
+        }
+        
+        //If moving piece is not on the right edge, then capturing right may be valid.
+        if (col < 8) {
+            bool canCapturePinningPieceRight = false;
+            if (isPinned && pinningPieceRow == row + 1 && pinningPieceCol == col + 1) { 
+                canCapturePinningPieceRight = true;
+            }
+            if ((board[row + 1][col + 1].piece_type != EMPTY && !board[row + 1][col + 1].color) || canCapturePinningPieceRight) { 
+                moveset[moveIndex].row = row + 1;
+                moveset[moveIndex].col = col + 1;
+                moveIndex++;
+            }
+            if (board[5][col + 1].special_status == EN_PASSANTABLE && !isPinned) { 
+                moveset[moveIndex].row = row + 1;
+                moveset[moveIndex].col = col + 1;
+                moveIndex++;
+            }
+        }  
+    }
+    
+    //Finds valid BLACK pawn moves. Only difference is that row number decreases as black pawn traverses the board. 
+    if (!board[row][col].color) {
+        if (board[row - 1][col].piece_type == EMPTY && !isPinned) { 
+            moveset[moveIndex].row = row - 1;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+        if (board[row][col].special_status == FIRST_MOVE) { 
+            if (board[row - 2][col].piece_type == EMPTY && !isPinned) { 
+                moveset[moveIndex].row = row - 2;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+            }
+        }
+
+        if (col > 1) {
+            bool canCapturePinningPieceLeft = false;
+            if (isPinned && pinningPieceRow == row - 1 && pinningPieceCol == col - 1) { 
+                canCapturePinningPieceLeft = true;
+            }
+                
+            if ((board[row - 1][col - 1].piece_type != EMPTY && board[row - 1][col - 1].color) || canCapturePinningPieceLeft) { 
+                moveset[moveIndex].row = row - 1;
+                moveset[moveIndex].col = col - 1;
+                moveIndex++;
+            }
+            if (board[4][col - 1].special_status == EN_PASSANTABLE && !isPinned) { 
+                moveset[moveIndex].row = row - 1;
+                moveset[moveIndex].col = col - 1;
+                moveIndex++;
+            }
+        }
+        
+        if (col < 8) {
+            bool canCapturePinningPieceRight = false;
+            if (isPinned && pinningPieceRow == row - 1 && pinningPieceCol == col + 1) { 
+                canCapturePinningPieceRight = true;
+            }
+            if ((board[row - 1][col + 1].piece_type != EMPTY && board[row - 1][col + 1].color) || canCapturePinningPieceRight) { 
+                moveset[moveIndex].row = row - 1;
+                moveset[moveIndex].col = col + 1;
+                moveIndex++;
+            }
+            if (board[4][col + 1].special_status == EN_PASSANTABLE && !isPinned) { 
+                moveset[moveIndex].row = row - 1;
+                moveset[moveIndex].col = col + 1;
+                moveIndex++;
+            }
+        }  
+    }
+
+    //If king is in check, then the only valid pawn moves are the moves that 
+    //block the check vector OR captures the checking piece (Not yet implemented)
+    if (checkAmnt == 1) { 
+        for (int i = 0; i < moveIndex; i++) { 
+            for (int j = 0; j < sizeof(checkVector) / sizeof(checkVector[0]); j++) { 
+                if (moveset[i].row != checkVector[j].row && moveset[i].col != checkVector[j].col) { 
+                    moveset[i].row = -1;
+                    moveset[i].col = -1;
+                }
+            }
+        }
+    }
+
+    //Sets the row and col of all unused spots to -1
+    for (int i = moveIndex; i < sizeof(moveset) / sizeof(moveset[0]); i++) { 
+        moveset[i].row = -1;
+        moveset[i].col = -1;
+    }
+
     return NULL;
 }
 
@@ -117,6 +294,10 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
     //Check if the current position of knight allows for such moves
     int move_index = 0; //counter to track the index of valid moves this knight has
     //if checkamnt is 0 the piece can freely move, if its 1 compare the moveset with check vector, and if its > 1 return current position
+    int curr_row = row;
+    int curr_col = col;
+    bool color = board[row][col].color;
+
     if (checkAmnt > 1) {
         moveset[0].row = row;
         moveset[0].col = col;
@@ -124,76 +305,125 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
     }
 
     //Two forward, one left
-    if (row >= 2 && col >= 1) {
-        row = row - 2;
-        col = col - 1;
+    if (curr_row >= 2 && curr_col >= 1) {
+        row = curr_row - 2;
+        col = curr_col - 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
     //Two forward, one right
-    if (row >= 2 && col <= 6) {
-        row = row - 2;
-        col = col + 1;
+    if (curr_row >= 2 && curr_col <= 6) {
+        row = curr_row - 2;
+        col = curr_col + 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
     //Two backward, one left
-    if (row <= 5 && col >= 1) {
-        row = row + 2;
-        col = col - 1;
+    if (curr_row <= 5 && curr_col >= 1) {
+        row = curr_row + 2;
+        col = curr_col - 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
     //Two backward, one right
-    if (row <= 5 && col <= 6) {
-        row = row + 2;
-        col = col + 1;
+    if (curr_row <= 5 && curr_col <= 6) {
+        row = curr_row + 2;
+        col = curr_col + 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
 
     //Two left, one forward
-    if (col >= 2 && row >= 1) {
-        row = row - 1;
-        col = col - 2;
+    if (curr_col >= 2 && curr_row >= 1) {
+        row = curr_row - 1;
+        col = curr_col - 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
     //Two right, one forward
-    if (col <= 5 && row >= 1) {
-        row = row - 1;
-        col = col + 2;
+    if (curr_col <= 5 && curr_row >= 1) {
+        row = curr_row - 1;
+        col = curr_col + 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
     //Two left, one backward
-    if (col >= 2 && row <= 6) {
-        row = row + 1;
-        col = col - 2;
+    if (curr_col >= 2 && curr_row <= 6) {
+        row = curr_row + 1;
+        col = curr_col - 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
     //Two right, one backward
-    if (col <= 5 && row <= 6) {
-        row = row + 1;
-        col = col + 2;
+    if (curr_col <= 5 && curr_row <= 6) {
+        row = curr_row + 1;
+        col = curr_col + 2;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+            moveset[move_index].attacked = false;
+        }
+        else {
+            moveset[move_index].attacked = true;
+        }
     }
+
     if (checkAmnt == 1) {
         for (int i = 0; i < move_index; i++) {
             for (int j = 0; j < (int)sizeof(checkVector); j++) {
                 if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col) {
-                    moveset[i].row = NULL;
-                    moveset[i].col = NULL;
+                    moveset[i].row = -1;
+                    moveset[i].col = -1;
                 }
             } 
         }
@@ -268,6 +498,168 @@ static void validRookMoves(int row, int col, position_t moveset[28])
 static void validQueenMoves(int row, int col, position_t moveset[28])
 {
     // Implement queen-specific logic
+
+    if (board[row][col].piece_type != QUEEN) { 
+        return;
+    }
+
+    int moveIndex = 0;
+    //Traverse along unit vector {1, 0}
+    for (int i = col; i <= 8; i++) { 
+        if (board[row][i].piece_type != EMPTY) {
+            if (board[row][i].color != board[row][col].color) {
+                moveset[moveIndex].row = row;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[row][i].piece_type == EMPTY) { 
+            moveset[moveIndex].row = row;
+            moveset[moveIndex].col = i;
+            moveIndex++;
+        }
+    }
+    //Traverse along unit vector {-1, 0}
+    for (int i = col; i >= 1; i--) { 
+        if (board[row][i].piece_type != EMPTY) {
+            if (board[row][i].color != board[row][col].color) {
+                moveset[moveIndex].row = row;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[row][i].piece_type == EMPTY) { 
+            moveset[moveIndex].row = row;
+            moveset[moveIndex].col = i;
+            moveIndex++;
+        }
+    }
+    //Traverse along unit vector {0, 1}
+    for (int i = row; i <= 8; i++) { 
+        if (board[i][col].piece_type != EMPTY) {
+            if (board[i][col].color != board[i][col].color) {
+                moveset[moveIndex].row = i;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+                break;
+            }
+            else { 
+                break;
+            }
+        }
+        else if (board[i][col].piece_type == EMPTY) { 
+            moveset[moveIndex].row = i;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+    }
+
+    //Traverse along unit vector {0, -1}
+    bool breakOuterLoop = false;
+    for (int i = row; i >= 1 && !breakOuterLoop; i--) { 
+        if (board[i][col].piece_type != EMPTY) {
+            if (board[i][col].color != board[i][col].color) {
+                moveset[moveIndex].row = i;
+                moveset[moveIndex].col = col;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                breakOuterLoop = true;
+                break;
+            }
+        }
+        else if (board[i][col].piece_type == EMPTY) { 
+            moveset[moveIndex].row = i;
+            moveset[moveIndex].col = col;
+            moveIndex++;
+        }
+    }
+    //Traverse along unit vector {1, 1}
+    breakOuterLoop = false;
+    for (int i = col; i <= 8 && !breakOuterLoop; i++) { 
+        for (int j = row; j <= 8; j++) {
+            if (board[j][i].piece_type != EMPTY) {
+                if (board[j][i].color != board[row][col].color) {
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                break;
+                breakOuterLoop = true;
+            }
+        }
+            else if (board[j][i].piece_type == EMPTY) { 
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+            }
+        }
+    }
+
+    //Traverse along unit vector {1, -1}
+    breakOuterLoop = false;
+    for (int i = col; i <= 8 && !breakOuterLoop; i++) { 
+        for (int j = row; j >= 1; j--) {
+            if (board[j][i].piece_type != EMPTY) {
+                if (board[j][i].color != board[row][col].color) {
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                breakOuterLoop = true;
+                break;
+            }
+        }
+            else if (board[j][i].piece_type == EMPTY) { 
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+            }
+        }
+    }
+
+    //Traverse along unit vector {-1, -1}
+    breakOuterLoop = false;
+    for (int i = col; i >= 1 && !breakOuterLoop; i--) { 
+        for (int j = row; j >= 1; j--) {
+            if (board[j][i].piece_type != EMPTY) {
+                if (board[j][i].color != board[row][col].color) {
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+                breakOuterLoop = true;
+                break;
+            }
+            else { 
+                breakOuterLoop = true;
+                break;
+            }
+        }
+            else if (board[j][i].piece_type == EMPTY) { 
+                moveset[moveIndex].row = j;
+                moveset[moveIndex].col = i;
+                moveIndex++;
+            }
+        }
+    }
+    
+
     return NULL;
 }
 
@@ -461,7 +853,8 @@ static void setDiscoverCheckFlags(bool kingColor)
             // This directions allied peice found next intercardinal direction
             if (board[row][col].color == kingColor)
             {
-                board[row][col].discover_check_uv = directions[k];
+                board[row][col].discover_check_uv[0] = directions[k][0];
+                board[row][col].discover_check_uv[1] = directions[k][1];
                 break;
             }
 

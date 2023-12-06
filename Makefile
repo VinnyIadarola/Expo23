@@ -14,7 +14,7 @@ SOURCES = ChessLibrary.c ChessLibraryTester.c Firmware.c GameEngine.c
 HEADERS = ChessLibrary.h GameEngine.h
 
 # Define the object files from the source files (automatic)
-OBJECTS = $(SOURCES:.c=.o)
+OBJECTS = $(SOURCES:.c=.o) 
 
 # Define your target executable
 TARGET = ChessLibraryTester
@@ -36,6 +36,7 @@ $(TARGET): $(OBJECTS)
 # Clean up
 clean:
 	del $(OBJECTS) $(TARGET)
+	
 
 # Rule to run the program
 run: all

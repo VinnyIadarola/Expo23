@@ -52,7 +52,6 @@ void randomChessBoard()
 
             // Assign random special status
             board[i][j].special_status = rand() % 2;
-            board[i][j].discover_check = rand() % 2;
         }
     }
 }
