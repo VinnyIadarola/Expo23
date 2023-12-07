@@ -301,6 +301,8 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
     if (checkAmnt > 1) {
         moveset[0].row = row;
         moveset[0].col = col;
+        moveset[1].row = -1;
+        moveset[1].col = -1;
         return;
     }
 
@@ -418,10 +420,13 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
         }
     }
 
+    moveset[move_index].row = -1;
+    moveset[move_index].col = -1;
+
     if (checkAmnt == 1) {
         for (int i = 0; i < move_index; i++) {
             for (int j = 0; j < (int)sizeof(checkVector); j++) {
-                if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col) {
+                if (checkVector[j].row != moveset[i].row && checkVector[j].col != moveset[i].col) {
                     moveset[i].row = -1;
                     moveset[i].col = -1;
                 }
