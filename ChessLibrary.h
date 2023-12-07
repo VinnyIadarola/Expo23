@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+//kajsdfalsj
 typedef enum
 {
     KING,
