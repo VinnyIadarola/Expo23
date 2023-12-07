@@ -297,7 +297,8 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
     int curr_row = row;
     int curr_col = col;
     bool color = board[row][col].color;
-
+    bool valid = true;
+    
     if (checkAmnt > 1) {
         moveset[0].row = row;
         moveset[0].col = col;
@@ -310,56 +311,102 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
     if (curr_row >= 2 && curr_col >= 1) {
         row = curr_row - 2;
         col = curr_col - 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+        
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
+
     //Two forward, one right
     if (curr_row >= 2 && curr_col <= 6) {
         row = curr_row - 2;
         col = curr_col + 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
+        
     //Two backward, one left
     if (curr_row <= 5 && curr_col >= 1) {
         row = curr_row + 2;
         col = curr_col - 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
     //Two backward, one right
     if (curr_row <= 5 && curr_col <= 6) {
         row = curr_row + 2;
         col = curr_col + 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
 
@@ -367,72 +414,104 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
     if (curr_col >= 2 && curr_row >= 1) {
         row = curr_row - 1;
         col = curr_col - 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
     //Two right, one forward
     if (curr_col <= 5 && curr_row >= 1) {
         row = curr_row - 1;
         col = curr_col + 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
     //Two left, one backward
     if (curr_col >= 2 && curr_row <= 6) {
         row = curr_row + 1;
         col = curr_col - 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
     //Two right, one backward
     if (curr_col <= 5 && curr_row <= 6) {
         row = curr_row + 1;
         col = curr_col + 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
+
+        if (checkAmnt == 1) {
+            for (int i = 0; i < (int)sizeof(checkVector); i++) {
+                if (checkVector[i].row != row && checkVector[i].col != col) {
+                    valid = false;
+                }
+            } 
         }
-        else {
-            moveset[move_index].attacked = true;
+
+        if (valid) {
+            moveset[move_index].row = row;
+            moveset[move_index].col = col;
+            move_index++;
+            if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+                moveset[move_index].attacked = false;
+            }
+            else {
+                moveset[move_index].attacked = true;
+            }
         }
     }
 
     moveset[move_index].row = -1;
     moveset[move_index].col = -1;
-
-    if (checkAmnt == 1) {
-        for (int i = 0; i < move_index; i++) {
-            for (int j = 0; j < (int)sizeof(checkVector); j++) {
-                if (checkVector[j].row != moveset[i].row && checkVector[j].col != moveset[i].col) {
-                    moveset[i].row = -1;
-                    moveset[i].col = -1;
-                }
-            } 
-        }
-    }
 
     return NULL;
 }
