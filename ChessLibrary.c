@@ -785,7 +785,7 @@ static void getCheckVector(position_t attacker, position_t king)
                                                                                  : 0;
     int colDirection = (king.col > attacker.col) ? 1 : (king.col < attacker.col) ? -1
                                                                                  : 0;
-    // Determines the distance needed to covor along the path from the king to attacker
+    // Determines the distance needed to cover along the path from the king to attacker
     int distance = max(abs(king.row - attacker.row), abs(king.col - attacker.col));
 
     for (int i = 0; i < distance; i++)
@@ -943,7 +943,7 @@ static game_state_t checkStalemate()
     return STALEMATE;
 }
 
-game_state_t checkGamOver()
+game_state_t checkGameOver()
 {
     checkStalemate();
     return CHESS;
