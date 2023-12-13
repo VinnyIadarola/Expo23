@@ -304,134 +304,166 @@ static void validKnightMoves(int row, int col, position_t moveset[28])
     int curr_col = col;
     bool color = board[row][col].color;
 
-    if (checkAmnt > 1) {
+    if (checkAmnt > 1)
+    {
         moveset[0].row = row;
         moveset[0].col = col;
         return;
     }
 
-    //Two forward, one left
-    if (curr_row >= 2 && curr_col >= 1) {
-        row = curr_row - 2;
-        col = curr_col - 1;
+    // Two forward, one left
+    if (row >= 2 && col >= 1)
+    {
+        row = row - 2;
+        col = col - 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+        if (board[row][col].color != color)
+        {
+            moveset[move_index].attacked = true;
+        }
+        else
+        {
             moveset[move_index].attacked = false;
         }
-        else {
+    }
+    // Two forward, one right
+    if (row >= 2 && col <= 6)
+    {
+        row = row - 2;
+        col = col + 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].color != color)
+        {
+            moveset[move_index].attacked = true;
+        }
+        else
+        {
+            moveset[move_index].attacked = false;
+        }
+    }
+    // Two backward, one left
+    if (row <= 5 && col >= 1)
+    {
+        row = row + 2;
+        col = col - 1;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
+        {
+            moveset[move_index].attacked = false;
+        }
+        else
+        {
             moveset[move_index].attacked = true;
         }
     }
-    //Two forward, one right
-    if (curr_row >= 2 && curr_col <= 6) {
-        row = curr_row - 2;
-        col = curr_col + 1;
+    // Two backward, one right
+    if (row <= 5 && col <= 6)
+    {
+        row = row + 2;
+        col = col + 1;
         moveset[move_index].row = row;
         moveset[move_index].col = col;
         move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
+        {
             moveset[move_index].attacked = false;
         }
-        else {
-            moveset[move_index].attacked = true;
-        }
-    }
-    //Two backward, one left
-    if (curr_row <= 5 && curr_col >= 1) {
-        row = curr_row + 2;
-        col = curr_col - 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
-        }
-        else {
-            moveset[move_index].attacked = true;
-        }
-    }
-    //Two backward, one right
-    if (curr_row <= 5 && curr_col <= 6) {
-        row = curr_row + 2;
-        col = curr_col + 1;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
-        }
-        else {
-            moveset[move_index].attacked = true;
-        }
-    }
-
-    //Two left, one forward
-    if (curr_col >= 2 && curr_row >= 1) {
-        row = curr_row - 1;
-        col = curr_col - 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
-        }
-        else {
-            moveset[move_index].attacked = true;
-        }
-    }
-    //Two right, one forward
-    if (curr_col <= 5 && curr_row >= 1) {
-        row = curr_row - 1;
-        col = curr_col + 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
-        }
-        else {
-            moveset[move_index].attacked = true;
-        }
-    }
-    //Two left, one backward
-    if (curr_col >= 2 && curr_row <= 6) {
-        row = curr_row + 1;
-        col = curr_col - 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
-        }
-        else {
-            moveset[move_index].attacked = true;
-        }
-    }
-    //Two right, one backward
-    if (curr_col <= 5 && curr_row <= 6) {
-        row = curr_row + 1;
-        col = curr_col + 2;
-        moveset[move_index].row = row;
-        moveset[move_index].col = col;
-        move_index++;
-        if (board[row][col].piece_type == EMPTY || board[row][col].color == color) {
-            moveset[move_index].attacked = false;
-        }
-        else {
+        else
+        {
             moveset[move_index].attacked = true;
         }
     }
 
-    if (checkAmnt == 1) {
-        for (int i = 0; i < move_index; i++) {
-            for (int j = 0; j < (int)sizeof(checkVector); j++) {
-                if (checkVector[j].row == moveset[i].row && checkVector[j].col == moveset[i].col) {
+    // Two left, one forward
+    if (col >= 2 && row >= 1)
+    {
+        row = row - 1;
+        col = col - 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
+        {
+            moveset[move_index].attacked = false;
+        }
+        else
+        {
+            moveset[move_index].attacked = true;
+        }
+    }
+    // Two right, one forward
+    if (col <= 5 && row >= 1)
+    {
+        row = row - 1;
+        col = col + 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
+        {
+            moveset[move_index].attacked = false;
+        }
+        else
+        {
+            moveset[move_index].attacked = true;
+        }
+    }
+    // Two left, one backward
+    if (col >= 2 && row <= 6)
+    {
+        row = row + 1;
+        col = col - 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
+        {
+            moveset[move_index].attacked = false;
+        }
+        else
+        {
+            moveset[move_index].attacked = true;
+        }
+    }
+    // Two right, one backward
+    if (col <= 5 && row <= 6)
+    {
+        row = row + 1;
+        col = col + 2;
+        moveset[move_index].row = row;
+        moveset[move_index].col = col;
+        move_index++;
+        if (board[row][col].piece_type == EMPTY || board[row][col].color == color)
+        {
+            moveset[move_index].attacked = false;
+        }
+        else
+        {
+            moveset[move_index].attacked = true;
+        }
+    }
+
+    moveset[move_index].row = -1;
+    moveset[move_index].col = -1;
+
+    if (checkAmnt == 1)
+    {
+        for (int i = 0; i < move_index; i++)
+        {
+            for (int j = 0; j < (int)sizeof(checkVector); j++)
+            {
+                if (checkVector[j].row != moveset[i].row && checkVector[j].col != moveset[i].col)
+                {
                     moveset[i].row = -1;
                     moveset[i].col = -1;
                 }
-            } 
+            }
         }
     }
 
